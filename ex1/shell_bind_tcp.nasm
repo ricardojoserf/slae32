@@ -34,11 +34,15 @@ _start:
 	mov dword [socket], eax
 
 
+
+
 	mov eax, 0x361
 	mov ebx, 1
 	mov ecx, message2
 	mov edx, mlen2
 	int 0x80
+
+
 
 
 	mov eax, 0x4
