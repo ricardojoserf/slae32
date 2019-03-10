@@ -10,45 +10,34 @@ global _start
 
 section .text
 _start:
-
-	; Get argc
 	pop ecx			; argc in ecx
 	cmp ecx, 3
 	jnz exit  		; If argc != 3 -> EXIT
-    add ecx, '0'	; convert number to character
-    push ecx		; need it in a buffer - use the stack
-    mov ecx, esp	; address of buffer in ecx, as sys_write wants!    
-    mov edx, 1		; number of bytes to write
-    mov ebx, 1		; file descriptor - STDOUT
-    mov eax, 4		; __NR_write
-    int 80h
-    pop   ecx      ; Dump number of args from stack
+	;jz spawn_shell
 
-   
 nextarg:
 	pop ecx ; get pointer to string
-	test ecx, ecx ; or "cmp ecx, 0"
-	jz exit
-	; now we need to find the length of our (zero-terminated) string
-	xor edx, edx ; or "mov edx, 0"
+	test ecx, ecx
+	jz spawn_shell
+	xor edx, edx 
 
 
-getlen:
+getlen: ; now we need to find the length of our (zero-terminated) string
 	cmp byte [ecx + edx], 0
 	jz gotlen
 	inc edx
 	jmp getlen
 
+
 gotlen:
 	; now ecx -> string, edx = length
-	mov   eax,4    ; Function 4 - write"
-	mov   ebx,1    ; to stdout
-	int   80h
-	; probably want to print a newline here, "for looks"
-	jmp nextarg ; cook until done
+	mov eax,4
+	mov ebx,1
+	int 0x80
+	jmp nextarg 
 
 
-a:
+spawn_shell:
 	; Print message
 	xor eax, eax
 	mov al, 0x4
