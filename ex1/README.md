@@ -31,10 +31,17 @@ https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-e
 
 ![Screenshot](images/1.png)
 
-man bind
 
 ![Screenshot](images/2.png)
 
-man socket
 
 ![Screenshot](images/3.png)
+
+
+![Screenshot](images/4.png)
+
+
+![Screenshot](images/5.png)
+
+
+![Screenshot](images/6.png)
