@@ -51,7 +51,7 @@ _start:
 	mov eax, 0x169
 	mov ebx, [socket]
 	push    dword   0x00000000 
-    push    dword   0x2823
+    push    dword   0xb822; big endian
     push    word    2 
     mov [socket_address], esp
 	mov ecx, [socket_address]
@@ -114,9 +114,9 @@ _start:
 
 
 	; Exit
-	;mov eax, 1
-	;mov ebx, 10		; sys_exit syscall
-	;int 0x80
+	mov eax, 1
+	mov ebx, 10		; sys_exit syscall
+	int 0x80
 
 
 
@@ -135,6 +135,7 @@ section .data
 section .bss
 	socket resd 1
 	socket_address resd 2
+	accept_res	resd 1
 	cArray	resd 1
 			resd 1
 			resd 1
