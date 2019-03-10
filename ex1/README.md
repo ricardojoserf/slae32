@@ -22,3 +22,12 @@ msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 |
 ```
 sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888" bindshell | tee libemu_res/libemu_res.txt
 ```
+
+```
+cat /usr/include/i386-linux-gnu/asm/unistd_32.h 
+```
+
+```
+printf "%x\n" 363
+```
+
