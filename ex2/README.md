@@ -5,6 +5,8 @@
 sh libemu.sh "msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1" bindshell | tee libemu_res/libemu_res.txt
 ```
 
+Get Argc value: 	https://forum.nasm.us/index.php?topic=889.0
+
 
 ![Screenshot](images/1.png)
 
