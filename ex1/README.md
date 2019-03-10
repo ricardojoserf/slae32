@@ -31,3 +31,11 @@ cat /usr/include/i386-linux-gnu/asm/unistd_32.h
 printf "%x\n" 363
 ```
 
+## Useful links
+```
+https://stackoverflow.com/questions/19850082/using-nasm-and-tcp-sockets
+http://man7.org/linux/man-pages/man2/socket.2.html
+https://rosettacode.org/wiki/Sockets
+http://www6.uniovi.es/cscene/CS5/CS5-05.html
+https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
+```
