@@ -12,6 +12,6 @@ echo '[+] Done!'
 
 rm shell_reverse_tcp.o
 
-./shell_reverse_tcp
+#./shell_reverse_tcp
 
 echo ''

