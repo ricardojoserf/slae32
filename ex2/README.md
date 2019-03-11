@@ -28,3 +28,27 @@ c[::-1].encode('hex')
 ![Screenshot](images/resd_problem/4.png)
 
 ![Screenshot](images/resd_problem/5.png)
+
+![Screenshot](images/Screenshot_1.png)
+
+![Screenshot](images/Screenshot_2.png)
+
+![Screenshot](images/Screenshot_3.png)
+
+![Screenshot](images/Screenshot_4.png)
+
+![Screenshot](images/Screenshot_5.png)
+
+![Screenshot](images/Screenshot_6.png)
+
+![Screenshot](images/Screenshot_7.png)
+
+![Screenshot](images/Screenshot_8.png)
+
+![Screenshot](images/Screenshot_9.png)
+
+![Screenshot](images/Screenshot_10.png)
+
+![Screenshot](images/Screenshot_11.png)
+
+
