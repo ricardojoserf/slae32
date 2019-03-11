@@ -3,6 +3,11 @@
 
 ## Usage
 
+
+```
+./wrapper.py $IP $PORT
+```
+
 ![Screenshot](images/wrapper/1.png)
 
 ![Screenshot](images/wrapper/2.png)

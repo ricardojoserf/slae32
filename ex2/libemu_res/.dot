@@ -1,4 +1,0 @@
-digraph G {
-	//rankdir=LR
-	node [fontname=Courier, labeljust=r];
-}
