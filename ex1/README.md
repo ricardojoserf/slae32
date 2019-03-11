@@ -8,6 +8,7 @@ python3 wrapper.py $PORT
 
 ![Screenshot](images/wrapper/5.png)
 
+If the port causes problems, a warning message appears:
 ![Screenshot](images/wrapper/6.png)
 
 
