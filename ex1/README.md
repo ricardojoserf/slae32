@@ -15,18 +15,24 @@ python3 wrapper.py $PORT
 
 ## Steps
 
-Get "sctest" result:
+Get "sctest" result (also using *libemu.sh* script in "scripts/" folder):
 ```
 msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 | ./sctest -vvv -Ss 10000 -G bindshell.dot
+
+-------------------------------------
 
 sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888" bindshell | tee libemu_res/libemu_res.txt
 ```
 
-Get hexadecimal values for every syscall (also using "syscallhex.sh" script in "scripts/" folder):
+Get hexadecimal values for every syscall (also using *syscallhex.sh* script in **scripts/** folder):
 ```
 cat /usr/include/i386-linux-gnu/asm/unistd_32.h | listen
 
 printf "%x\n" 363
+
+-------------------------------------
+
+sh syscallhex.sh listen
 ```
 
 
