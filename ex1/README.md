@@ -15,7 +15,7 @@ python3 wrapper.py $PORT
 
 ## Steps
 
-Get "sctest" result (also using *libemu.sh* script in "scripts/" folder):
+Get "sctest" result (also using *libemu.sh* script in **scripts/** folder):
 ```
 msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 | ./sctest -vvv -Ss 10000 -G bindshell.dot
 
