@@ -2,13 +2,13 @@
 
 file="insertion-decoder"
 
-echo '[+] Assembling with Nasm ... '
+#echo '[+] Assembling with Nasm ... '
 nasm -f elf32 -o $file.o $file.nasm
 
-echo '[+] Linking ...'
+#echo '[+] Linking ...'
 ld  -m elf_i386 -o $file $file.o
 
-echo '[+] Done!'
+#echo '[+] Done!'
 
 rm $file.o
 
@@ -18,6 +18,6 @@ objdump -d ./$file|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|t
 
 #./$file
 
-rm s
+#rm s
 
-gcc -fno-stack-protector -z execstack shellcode.c -o s
+#gcc -fno-stack-protector -z execstack shellcode.c -o s
