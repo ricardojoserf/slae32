@@ -3,5 +3,5 @@
 ## Usage
 
 ```
-python random-insertion-enc.py  && ./shellcode && ./shellcode
+python test.py  && ./shellcode && ./shellcode
 ```
