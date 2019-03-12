@@ -18,7 +18,10 @@ for x in bytearray(shellcode) :
 	
 
 	#x = x^int("0xe1", 16)
-
+	print x
+	x -= 1
+	print x
+	
 	encoded += '\\x'
 	encoded += '%02x' % x
 	encoded += '\\x%02x' % 0xAA
@@ -31,7 +34,8 @@ for x in bytearray(shellcode) :
 
 	# encoded2 += '0x%02x,' % random.randint(1,255)
 
-
+encoded += '\\xbb\\xbb'
+encoded2 += '0xbb,0xbb'
 
 print encoded
 
