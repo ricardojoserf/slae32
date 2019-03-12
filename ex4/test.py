@@ -10,10 +10,6 @@ def ror(x, n, bits = 8):
     mask = (2**n) - 1
     mask_bits = x & mask
     return (x >> n) | (mask_bits << (bits - n))
- 
-
-def rol(x, n, bits = 8):
-    return ror(x, bits - n, bits)
 
 
 def get_stop_code(shellcode):
@@ -35,8 +31,8 @@ def encode_shellcode(shellcode, hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
+		x = ror(x, 8)
 		x = x - 7
-		#x = 255 - x
 		encoded2 += '0x'
 		encoded2 += '%02x,' %x
 		# Value 2: Random value != stop_code
