@@ -3,5 +3,5 @@
 ## Usage
 
 ```
-./random-insertion-enc.py && ./create_binary.py && ./shellcode
+python random-insertion-enc.py  && ./shellcode && ./shellcode
 ```

@@ -21,4 +21,4 @@ shellcode = os.popen('sh compile.sh').read().splitlines()[0]
 create_new_file(shellcode)
 
 os.system("rm s")
-os.system("gcc -fno-stack-protector -z execstack shellcode.c -o shellcode")
+os.system("gcc -fno-stack-protector -z execstack shellcode.c -o s")
