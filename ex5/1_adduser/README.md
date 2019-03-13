@@ -250,4 +250,14 @@ Finally, the fourth syscall is the EXIT call, which ends the program:
 ![Screenshot](../images/adduser/32.png)
 
 
+
+
+### Update/correct NASM file
+
 Now we can update the nasm code deleting the unused opcodes and adding the string we found.
+
+![Screenshot](../images/read_file/33.png)
+
+Finally we can compile the nasm file and check it works correctly:
+
+![Screenshot](../images/read_file/34.png)

