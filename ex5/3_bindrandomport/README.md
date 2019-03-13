@@ -371,13 +371,13 @@ And then the values are:
 
 Now we can update the nasm code adding the necessary jump:
 
-![Screenshot](../images/read_file/28.png)
+![Screenshot](../images/randbind/28.png)
 
 Finally we can compile the nasm file and check it works correctly:
 
-![Screenshot](../images/read_file/29.png)
+![Screenshot](../images/randbind/29.png)
 
-![Screenshot](../images/read_file/30.png)
+![Screenshot](../images/randbind/30.png)
 
 
 

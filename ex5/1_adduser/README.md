@@ -177,6 +177,9 @@ Now, all the shellcode with the four syscalls can be read:
 
 ![Screenshot](../images/adduser/20.png)
 
+
+### Syscall 1
+
 The first syscall is the one in 0x00404047, so we create a breakpoint in there and see the value of the registers:
 
 ![Screenshot](../images/adduser/21.png)
@@ -184,6 +187,9 @@ The first syscall is the one in 0x00404047, so we create a breakpoint in there a
 The EAX value is 70 so in fact it is a setreuid() syscall. The value of EBX and ECX registers is 0, so the the reak and effective user ID of the process will be 0:
 
 ![Screenshot](../images/adduser/22.png)
+
+
+### Syscall 2
 
 Next syscall is the one in 0x00404063, Before continuing a quick "hook-stop" is defined:
 
@@ -205,6 +211,9 @@ For understanding every value, the man page is read:
 
 ![Screenshot](../images/adduser/25.png)
 
+
+### Syscall 3
+
 Next, in the third syscall there is a "call" instruction to a function which we could not obtain using ndisasm:
 
 ![Screenshot](../images/adduser/26.png)
@@ -217,11 +226,9 @@ I set a break point at 0x404093 and see the next instructions:
 
 ![Screenshot](../images/adduser/28.png)
 
-We continue debugging and get to 0x00404099, the third syscall. At this point we are aware we "jumped" from 0x00404066 to 0x404092 and it seems we did nothing with those instructions. But... did we? 
+We continue debugging and get to 0x00404099, the third syscall. At this point we are aware we "jumped" from 0x00404066 to 0x404092 and it seems we did nothing with those instructions. 
 
-
-
-Well, we did! This is the string we found before, containing the line we will add to /etc/passwd. After the "call", this string address is stored in the stack. Then, the instruction in 0x404092 pops its value and now ecx has that address.
+Well, we did! This is the string we found before using the *strings* command, containing the line we will add to /etc/passwd. After the "call", this string address is stored in the stack. Then, the instruction in 0x404092 pops its value and now ecx has that address.
 
 ![Screenshot](../images/adduser/29.png)
 
@@ -242,6 +249,9 @@ These are:
 - EDX = 39 => Number of bytes to write 
 
 So, after this the file gets a new line.
+
+
+### Syscall 4
 
 Finally, the fourth syscall is the EXIT call, which ends the program:
 

@@ -138,6 +138,9 @@ We continue for one instruction using 'stepi' and the 'disassemble' command show
 
 ![Screenshot](../images/read_file/12.png)
 
+
+### JMP-CALL-POP detected
+
 In 0x00404040 there is a jump (JMP) to 0x404078 which immediately calls 0x00404042. This is obviously a JMP-CALL-POP so we will read the values after 0x404078, which contain "/etc/passwd"
 
 ![Screenshot](../images/read_file/13.png)
@@ -147,6 +150,7 @@ Now, we will set a breakpoint before every syscall: 0x0040404a, 0x0040405c, 0x00
 ![Screenshot](../images/read_file/14.png)
 
 
+### Syscall 1
 
 We reach the first syscall:
 
@@ -167,6 +171,7 @@ And then the values are:
 - ECX = 0 => These are the flags values. In this case it is only needed the read permission.
 
 
+### Syscall 2
 
 We reach the second syscall:
 
@@ -187,6 +192,7 @@ And then the values are:
 - EDX = 4096 => 4096 bytes will be read
 
 
+### Syscall 3
 
 We reach the third syscall:
 
@@ -205,7 +211,7 @@ And then the values are:
 - EDX = -14 => In the address 0x0040405e, EAX value is copied to EDX because read() on success returns the number of bytes read. In this case, the read() syscall returns -14. 
 
 
-
+### Syscall 4
 
 We reach the fourth syscall:
 
