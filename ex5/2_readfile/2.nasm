@@ -3,8 +3,9 @@ section .text
 	global _start 
 
 _start:
+	jmp test
 
-	jmp short 0x38
+call_test:
 	mov eax,0x5
 	pop ebx
 	xor ecx,ecx
@@ -25,12 +26,9 @@ _start:
 	mov eax,0x1
 	mov ebx,0x0
 	int 0x80
-	
-	call 0x2
-	das
-	gs jz 0xa4
-	das
-	jo 0xa5
-	jnc 0xb9
-	ja 0xac
-	db 0x00
+
+test:
+	call call_test
+	string: db "/etc/passwd",0x0
+
+

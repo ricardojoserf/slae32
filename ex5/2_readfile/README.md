@@ -91,7 +91,7 @@ After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the sysca
 
 - Syscall 1 (Value 0x5 or 5 in decimal): open() - *It opens the file specified by pathname*.
 
-- Syscall 2 (Value 0x3 or 3 in decimal): read() - *attempts  to  read up to count bytes from file descriptor fd into the buffer starting at buf.*
+- Syscall 2 (Value 0x3 or 3 in decimal): read() - *It attempts  to  read up to count bytes from file descriptor fd into the buffer starting at buf.*
 
 - Syscall 3 (Value 0x4 or 4 in decimal): write()
 
@@ -221,3 +221,14 @@ And then the values are:
 
 - EBX = 0 => Status 0 will represent the program finished correctly in this case.
 
+
+
+### Update/correct NASM file
+
+Now we can update the nasm code deleting the unused opcodes and adding the string we found.
+
+![Screenshot](../images/read_file/24.png)
+
+Finally we can compile the nasm file and check it works correctly:
+
+![Screenshot](../images/read_file/25.png)
