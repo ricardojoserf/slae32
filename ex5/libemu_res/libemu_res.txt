@@ -1,0 +1,47 @@
+graph file adduser.dot
+verbose = 3
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417000
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: 
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417000
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: 
+[emu 0x0x560200 [31;1mdebug[0m ] 31C9                            xor ecx,ecx
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417002
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: PF ZF 
+[emu 0x0x560200 [31;1mdebug[0m ] 89CB                            mov ebx,ecx
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417004
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: PF ZF 
+[emu 0x0x560200 [31;1mdebug[0m ] 6A46                            push byte 0x46
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417006
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: PF ZF 
+[emu 0x0x560200 [31;1mdebug[0m ] 58                              pop eax
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417007
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000046  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: PF ZF 
+[emu 0x0x560200 [31;1mdebug[0m ] CD80                            int 0x80
+stepcount 4
+copying vertexes
+optimizing graph
+vertex 0x5c1410
+going forwards from 0x5c1410
+ -> vertex 0x5c1630
+ -> vertex 0x5c1720
+ -> vertex 0x5c1800
+copying edges for 0x5c1800
+vertex 0x5c19f0
+going forwards from 0x5c19f0
+copying edges for 0x5c19f0
+[emu 0x0x560200 [31;1mdebug[0m ] cpu state    eip=0x00417009
+[emu 0x0x560200 [31;1mdebug[0m ] eax=0x00000046  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x560200 [31;1mdebug[0m ] Flags: PF ZF 
