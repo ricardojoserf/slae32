@@ -255,6 +255,7 @@ We set breakpoint in every one of them:
 ![Screenshot](../images/randbind/14.png)
 
 
+#### Syscall 1
 
 We reach the first syscall:
 
@@ -268,12 +269,15 @@ And then the values are:
 
 - EAX = 102 => Syscall is socketcall()
 
-- EBX = 1 => 
+- EBX = 1 => Option "SOCKET"
 
-- ECX = -1073745200 => 
+- ECX = -1073745200 => The stack address containing the pushed values "0x2" (*domain* is AF_INET), "0x1" (*type* is SOCK_STREAM) and "0x0" (*protocol* is not set):
 
-- EDX = 0 => 
+![Screenshot](../images/randbind/31.png)
 
+
+
+#### Syscall 2
 
 We reach the second syscall:
 
@@ -287,12 +291,15 @@ And then the values are:
 
 - EAX = 102 => Syscall is socketcall()
 
-- EBX = 4 => 
+- EBX = 4 => Option "LISTEN"
 
-- ECX = -1073745208 => 
+- ECX = -1073745208 => The stack address containing the values "0x3" (*s*, the file descriptor) and "0x0" (*backlog*, which defines the maximum length to which the queue of pending connections for sockfd may grow.)
 
-- EDX = 0 => 
+![Screenshot](../images/randbind/32.png)
 
+
+
+#### Syscall 3
 
 We reach the third syscall:
 
@@ -306,17 +313,19 @@ And then the values are:
 
 - EAX = 102 => Syscall is socketcall()
 
-- EBX = 5 => 
+- EBX = 5 => Option "ACCEPT"
 
-- ECX = -1073745208 => 
+- ECX = -1073745208 => The stack address containing the values "0x3" (*socketfd*, the file descriptor), "0X0" (*addr*, so the address is '0.0.0.0') and "0x2" (*addrlen*, so the length of the address is 32 bits)
 
-- EDX = 0 => 
+![Screenshot](../images/randbind/33.png)
 
 
 Now, it is necessary to check which is the port opened and connect to it:
 
 ![Screenshot](../images/randbind/19.png)
 
+
+#### Syscall 4
 
 Then, we reach the fourth syscall:
 
@@ -334,9 +343,10 @@ And then the values are:
 
 - ECX = 3 => New file descriptor
 
+Later the breakpoint is reached again only changing the ECX value to 2, 1 and then 0. 
 
-Later the breakpoint is reached again only changing the ECX value to 2, 1 and then 0.
 
+#### Syscall 5
 
 We reach the fifth syscall:
 
@@ -350,13 +360,11 @@ And then the values are:
 
 - EAX = 11 => Syscall is execve()
 
-- EBX = -1073745212 => 
+- EBX = -1073745212 => The stack address containing the values "0xbfffff20" and "0xb7fd70bb" (*dateiname* or the /bin/sh address)
 
-- ECX = 0 => 
+- ECX = 0 => The value of *argv[]*, which is none in this case.
 
-- EDX = 0 => 
-
-
+- EDX = 0 => Tha value of *envp[]*, which is none in this case.
 
 
 ### Update/correct NASM file
