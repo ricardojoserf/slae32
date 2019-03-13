@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file="$1"
+file="1"
 
 echo '[+] Assembling with Nasm ... '
 nasm -f elf32 -o $file.o $file.nasm
@@ -10,5 +10,3 @@ ld -o $file $file.o
 
 echo '[+] Done!'
 
-rm $file.o
-./$file
