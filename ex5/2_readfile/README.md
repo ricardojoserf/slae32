@@ -126,7 +126,7 @@ Also note that if we study the binary there are interesting strings we can find 
 First, the executable is attached in quiet mode:
 
 ```
-gdb -q 1
+gdb -q 2
 ```
 Then, we set the disassembly flavor, define the "hook-stop" function, and jump into the "main" function (the one from shellcode.c):
 
