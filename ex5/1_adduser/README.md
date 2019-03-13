@@ -231,7 +231,7 @@ Well, we did! This is the string we found before, containing the line we will ad
 
 We set a breakpoint in 0x00404099 and check the registers values:
 
-![Screenshot](../images/adduser/30.png)
+![Screenshot](../images/adduser/31.png)
 
 These are:
 
@@ -247,7 +247,7 @@ So, after this the file gets a new line.
 
 Finally, the fourth syscall is the EXIT call, which ends the program:
 
-![Screenshot](../images/adduser/31.png)
+![Screenshot](../images/adduser/32.png)
 
 
 Now we can update the nasm code deleting the unused opcodes and adding the string we found.
