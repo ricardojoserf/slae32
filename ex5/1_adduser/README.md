@@ -102,7 +102,7 @@ The two last syscalls seem to use the values 0x4 and 0x1:
 ![Screenshot](../images/adduser/10.png)
 
 
-After checking the /usr/include/i386-linux-gnu/asm/unistd_32.h file, the syscalls seem to be:
+After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the syscalls seem to be:
 
 - Syscall 1 (Value 0x46 or 70 in decimal): setreuid() - *It sets real and effective user IDs of the calling process*.
 
@@ -179,4 +179,75 @@ Now, all the shellcode with the four syscalls can be read:
 
 ![Screenshot](../images/adduser/20.png)
 
+The first syscall is the one in 0x00404047, so we create a breakpoint in there and see the value of the registers:
 
+![Screenshot](../images/adduser/21.png)
+
+The EAX value is 70 so in fact it is a setreuid() syscall. The value of EBX and ECX registers is 0, so the the reak and effective user ID of the process will be 0:
+
+![Screenshot](../images/adduser/22.png)
+
+Next syscall is the one in 0x00404063, Before continuing a quick "hook-stop" is defined:
+
+![Screenshot](../images/adduser/23.png)
+
+Then, the next breakpoint is reached. 
+
+![Screenshot](../images/adduser/24.png)
+
+The values are:
+
+- EAX = 5 => Syscall is open()
+
+- EBX = -1073745172 => The stack address, where the three hexadecimal values are stored (which we saw before are translated to '/etc//paswwd')
+
+- ECX = 1025 => The "flags" value. These value represents the permissions used in this operation (in this case the file is opened with read and write permissions).
+
+For understanding every value, the man page is read:
+
+![Screenshot](../images/adduser/25.png)
+
+Next, in the third syscall there is a "call" instruction to a function which we could not obtain using ndisasm:
+
+![Screenshot](../images/adduser/26.png)
+
+Before continuing to check the values in the next syscall, we must find out what this function does. We write the instructions from that point and realise the instructions are different to what gdb shows at first:
+
+![Screenshot](../images/adduser/27.png)
+
+I set a break point at 0x404093 and see the next instructions:
+
+![Screenshot](../images/adduser/28.png)
+
+We continue debugging and get to 0x00404099, the third syscall. At this point we are aware we "jumped" from 0x00404066 to 0x404092 and it seems we did nothing with those instructions. But... did we? 
+
+
+
+Well, we did! This is the string we found before, containing the line we will add to /etc/passwd. After the "call", this string address is stored in the stack. Then, the instruction in 0x404092 pops its value and now ecx has that address.
+
+![Screenshot](../images/adduser/29.png)
+
+![Screenshot](../images/adduser/30.png)
+
+We set a breakpoint in 0x00404099 and check the registers values:
+
+![Screenshot](../images/adduser/30.png)
+
+These are:
+
+- EAX = 4 => Syscall is write()
+
+- EBX = 3 => File descriptor
+
+- ECX = 4210795 => Address of the characters to write
+
+- EDX = 39 => Number of bytes to write 
+
+So, after this the file gets a new line.
+
+Finally, the fourth syscall is the EXIT call, which ends the program:
+
+![Screenshot](../images/adduser/31.png)
+
+
+Now we can update the nasm code deleting the unused opcodes and adding the string we found.

