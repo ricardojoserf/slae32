@@ -10,3 +10,4 @@ ld -o $file $file.o
 
 echo '[+] Done!'
 
+rm $file.o
