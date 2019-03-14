@@ -31,7 +31,7 @@ def encode_shellcode(shellcode, hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
-		x = ror(x, 8)
+		#x = ror(x, 1)
 		x = x - 7
 		encoded2 += '0x'
 		encoded2 += '%02x,' %x
@@ -92,7 +92,7 @@ def main():
 	
 	file_name = "insertion-decoder"
 	compile(file_name)
-	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
+	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
 	shellcode = os.popen(cmd).read().splitlines()[0]
 	print ("Shellcode: \n"+shellcode)
 	create_new_file_shellcode(shellcode)
