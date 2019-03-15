@@ -5,13 +5,6 @@ import random
 import sys, os
 
 
-
-def ror(x, n, bits = 8):
-    mask = (2**n) - 1
-    mask_bits = x & mask
-    return (x >> n) | (mask_bits << (bits - n))
-
-
 def get_stop_code(shellcode):
 	list_codes = bytearray(shellcode)
 	min_number = min(list_codes)
@@ -31,7 +24,6 @@ def encode_shellcode(shellcode, hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
-		#x = ror(x, 1)
 		x = x - 7
 		encoded2 += '0x'
 		encoded2 += '%02x,' %x
