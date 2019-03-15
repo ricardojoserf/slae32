@@ -24,8 +24,6 @@ for x in bytearray(shellcode) :
 	encoded2 += '%02x,' %(y & 0xff)
 
 
-print encoded
-
 print encoded2
 
 print 'Len: %d' % len(bytearray(shellcode))

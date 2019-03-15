@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-# Python Insertion Encoder 
 import random
 import sys, os
 
