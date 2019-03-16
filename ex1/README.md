@@ -148,10 +148,10 @@ int execve (
 ```
 
 
-Once we know the system calls or syscalls, the values used in them and the order, it is necessary to get the hexadecimal values for every syscall, using cat:
+Once we know the system calls or syscalls, the values used in them and the order, it is necessary to get the hexadecimal values for every syscall, using cat and printf to print the hexadecimal value:
 
 ```
-cat /usr/include/i386-linux-gnu/asm/unistd_32.h | listen
+cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep listen
 
 printf "%x\n" 363
 ```
@@ -162,9 +162,26 @@ Or the *syscallhex.sh* script (in **scripts/** folder)
 sh syscallhex.sh listen
 ```
 
+
+
+The system calls and their values are:
+
+- Socket: 359 (0x167)
+
+- Bind:     361 (0x169)
+
+- Listen:   363 (0x16b
+
+- Accept:   364 (0x16c)
+
+- Dup2:     63 (0x3f)
+
+- Execve:   11 (0xb)
+
+
 Also it is important to know how the system calls work in Linux. As stated in the [Skape's paper about egghunters](http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf) "the system call interface that is exposed to user-mode applications in Linux (on IA32) is provided through soft-interrupt 0x80. The following table describes the register layout that is used across all system calls"
 
-![Screenshot](images/wrapper/7.png)
+![Screenshot](images/7.png)
 
 Knowing this and the values from the Libemu's output, it is possible to write the nasm code.
 
@@ -187,6 +204,8 @@ Now we know the value in the original shellcode which must be substituted:
 After this, we just must take the input to the wrapper script, translate the port number to hexadecimal (in big endian format) and print the new shellcode with the port updated.
 
 
+------------------------------------------------------------------
+
 ## Second approach: Ndisasm
 
 A second approach, which can be considered easier, is to get the nasm file from the raw output from msfvenom:
@@ -206,47 +225,16 @@ And it works correctly:
 
 ![Screenshot](images/wrapper/10.png)
 
+This is included in the **ndisasm_approach** folder, but the wrapper has been developed and tested only for the first approach.
 
+
+------------------------------------------------------------------
 
 ## Some useful links
-```
-http://man7.org/linux/man-pages/man2/socket.2.html
-https://stackoverflow.com/questions/19850082/using-nasm-and-tcp-sockets
-http://man7.org/linux/man-pages/man2/socket.2.html
-https://rosettacode.org/wiki/Sockets
-http://www6.uniovi.es/cscene/CS5/CS5-05.html
-https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
-https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
-```
-
-
-
-
-
-
-
-
-
--------------------------------------------------
-
-## Deleting NOPs
-
-[socket] generates NOPs:
-
-![Screenshot](images/1.png)
-
-It is possible to solve it using the stack:
-
-![Screenshot](images/2.png)
-
-[accept_res] generates NOPs:
-
-![Screenshot](images/3.png)
-
-It is possible to solve it using the stack:
-
-![Screenshot](images/4.png)
-
-There is not NOPs anymore:
-
-![Screenshot](images/5.png)
+- http://man7.org/linux/man-pages/man2/socket.2.html
+- https://stackoverflow.com/questions/19850082/using-nasm-and-tcp-sockets
+- http://man7.org/linux/man-pages/man2/socket.2.html
+- https://rosettacode.org/wiki/Sockets
+- http://www6.uniovi.es/cscene/CS5/CS5-05.html
+- https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
+- https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
