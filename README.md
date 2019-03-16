@@ -1,9 +1,8 @@
 # Securitytube Linux Assembly Expert 32-bits
 
+This course focuses on teaching the basics of 32-bit assembly language for the Intel Architecture (IA-32) family of processors on the Linux platform and applying it to Infosec. Once we are through with the basics, we will look at writing shellcode, encoders, decoders, crypters and other advanced low level applications.
 
 <img src="http://videos.pentesteracademy.com.s3.amazonaws.com/videos/badges/low/SHELLCODING32.png" width="128" alt="Logo">
-
-This course focuses on teaching the basics of 32-bit assembly language for the Intel Architecture (IA-32) family of processors on the Linux platform and applying it to Infosec. Once we are through with the basics, we will look at writing shellcode, encoders, decoders, crypters and other advanced low level applications.
 
 
 ---------------------------------------------------
