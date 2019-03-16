@@ -1,5 +1,15 @@
 # Exercise 3
 
+## Assignment #3
+
+- Study about the Egg Hunter shellcode
+
+- Create a working demo of the Egghunter
+
+- Should be configurable for different payloads
+
+
+## What is an EggHunter?
 
 It is a very efficient exploitation method when we have little space to store our shellcode which can be seen as a [Staged Shellcode](https://en.wikipedia.org/wiki/Shellcode#Staged).
 
@@ -9,6 +19,8 @@ Knowing this, the first part is the most important and the one which must be res
 
 These egghunters have the three requirements needed: robustness, small size and they are fast. In all of them the author uses 8-byte "eggs", which means that the tag is used twice, so . The technique is based on the system calls, given they can *validate process-relative memory addresses without leading to a segmentation fault or other runtime error in the program itself*, using them to check if the memory is readable and later if the tag has been reached.
 
+
+## EggHunter study
 The two egghunters studied use the same syscall: access.
 
 ![Screenshot](images/1.png)
@@ -120,3 +132,11 @@ int main() {
 - Paper: http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf
 
 - Python PoC con Kolibri: https://medium.com/@rafaveira3/exploit-development-kolibri-v2-0-http-server-egg-hunter-example-1-5e435aa84879
+
+
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433

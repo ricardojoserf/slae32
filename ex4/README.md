@@ -1,6 +1,13 @@
 # Exercise 4
 
-## Test/usage
+## Assignment #4
+
+- Create a custom encoding scheme like the "Insertion Encoder" we showed you
+
+- PoC with using execve-stack as the shellcode to encode with your schema and execute
+
+
+## Usage
 
 For this assignment, a Python script has been created which generates the shellcode, updates and compiles the *decoder.nasm* file and updates and compiles the *shellcode.c* file, generating the final executable:
 
@@ -40,3 +47,9 @@ The value to verify the shellcode has finished will be calculated in the Python 
 
 
 
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433

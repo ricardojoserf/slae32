@@ -1,5 +1,15 @@
 # Exercise 2
 
+## Assignment #2
+
+- Create a Shell_Reverse_TCP shellcode
+
+    - Reverse connects to configured IP and Port
+
+    - Execs Shell on successful connection
+
+- IP and Port number should be easily configurable
+
 
 ## Usage
 
@@ -175,3 +185,11 @@ This is included in the **ndisasm_approach** folder, but the wrapper has been de
 - https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
 - https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
 - https://forum.nasm.us/index.php?topic=889.0
+
+
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433

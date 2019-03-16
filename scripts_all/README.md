@@ -30,6 +30,14 @@ Usage:
 ```
 
 
+## Script *html-wrapper.py*
+
+Translate README.md file to HTML code
+
+```
+python html-wrapper.py $README_PATH $HTML_FILENAME_PATH
+```
+
 ## Script *install_dependencies.sh*
 
 Install all the needed dependecies and Libemu.
@@ -82,3 +90,11 @@ Usage:
 ```
 sh syscallhex.sh $SYSCALL
 ```
+
+
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433

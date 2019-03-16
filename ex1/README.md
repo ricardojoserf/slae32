@@ -1,5 +1,15 @@
 # Exercise 1
 
+## Assignment #1
+
+- Create a Shell_Bind_TCP shellcode
+
+    - Binds to a port
+
+    - Execs Shell on incoming connection
+
+- Port number should be easily configurable
+
 
 ## Usage
 
@@ -242,3 +252,10 @@ This is included in the **ndisasm_approach** folder, but the wrapper has been de
 - https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
 - https://forum.nasm.us/index.php?topic=889.0
 
+
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433

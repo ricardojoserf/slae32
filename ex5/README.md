@@ -1,5 +1,16 @@
 # Exercise 5
 
+## Assignment #5
+
+- Take up at leat 3 shellcode samples created using Msfvenom for linux/x86
+
+- Use GDB/Ndisasm/Libemu to dissect the functionality of the shellcode
+
+- Present your analysis
+
+
+## List of payloads
+
 Payloads studied:
 
 - Payload [*linux/x86/adduser*](https://github.com/ricardojoserf/slae/tree/master/ex5/1_adduser)
@@ -7,6 +18,8 @@ Payloads studied:
 - Payload [*linux/x86/read_file*](https://github.com/ricardojoserf/slae/tree/master/ex5/2_readfile)
 
 - Payload [*linux/x86/shell_bind_tcp_random_port*](https://github.com/ricardojoserf/slae/tree/master/ex5/3_bindrandomport)
+
+
 ## 5.1 Payload *linux/x86/adduser*
 
 
@@ -895,5 +908,11 @@ Finally we can compile the nasm file and check it works correctly:
 
 ![Screenshot](images/randbind/30.png)
 
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433
 
 

@@ -1,5 +1,14 @@
 # Exercise 6
 
+## Assignment #6
+
+- Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
+
+- The polymorphiv versions cannot be larger 150% of the existing shellcode
+
+- Bonus points for making it shorter in length than original
+
+
 ## 6.1 Shellcode "TCP bind shell" 
 
 Original size: 108 bytes
@@ -37,19 +46,8 @@ Url: http://shell-storm.org/shellcode/files/shellcode-875.php
 
 
 
-## Shellcode size
+## Note
 
-```
-objdump -d ./$1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
- | sed -e 's/\\/\\\\/g' | tr -cd 'x' | wc -c
-```
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
 
-## Pre-steps
-For files 3 and 4:
-```
-awk '//{print $4, $5 }' a
-```
-
-```
-while read LINE; do echo ";$LINE"; done < 1.nasm
-```
+Student ID: SLAE - 1433

@@ -1,5 +1,14 @@
 # Exercise 7
 
+## Assignment #7
+
+- Create a custom crypter like the one shown in the "crypters" video
+
+- Free to use any existing encryption schema
+
+- Can use any programming language
+
+
 ## Encryption
 
 In this assignment the encryption chosen is AES-CBC. The programming language is Python because i found an example to execute the shellcode with it.
@@ -33,3 +42,9 @@ python main.py -d 7L8lgzzXoM1KnsFbIFOPgY3PPx8K5aM5IT2HC8ULBrhcYvbTr4/ItEVN6DgDuJ
 
 ![Screenshot](images/2.png)
 
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433
