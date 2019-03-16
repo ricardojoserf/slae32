@@ -381,3 +381,13 @@ Finally we can compile the nasm file and check it works correctly:
 
 
 
+---------------------------------------------------
+
+
+## Note
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
+
+Student ID: SLAE - 1433
+
+
