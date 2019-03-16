@@ -2,12 +2,12 @@
 
 This course focuses on teaching the basics of 32-bit assembly language for the Intel Architecture (IA-32) family of processors on the Linux platform and applying it to Infosec. Once we are through with the basics, we will look at writing shellcode, encoders, decoders, crypters and other advanced low level applications.
 
-<img src="http://videos.pentesteracademy.com.s3.amazonaws.com/videos/badges/low/SHELLCODING32.png" width="128" alt="Logo">
+<img src="scripts_all/logo.png" width="128" alt="Logo">
 
 
 ---------------------------------------------------
 
-## [Assignment #1](https://github.com/ricardojoserf/slae/tree/master/ex1)
+## [Assignment #1](https://github.com/ricardojoserf/slae/tree/master/a1_Shell_Bind_Tcp)
 
 - Create a Shell_Bind_TCP shellcode
 
@@ -21,7 +21,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 ---------------------------------------------------
 
 
-## [Assignment #2](https://github.com/ricardojoserf/slae/tree/master/ex2)
+## [Assignment #2](https://github.com/ricardojoserf/slae/tree/master/a2_Shell_Reverse_Tcp)
 
 - Create a Shell_Reverse_TCP shellcode
 
@@ -35,7 +35,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 ---------------------------------------------------
 
 
-## [Assignment #3](https://github.com/ricardojoserf/slae/tree/master/ex3)
+## [Assignment #3](https://github.com/ricardojoserf/slae/tree/master/a3_Egg_Hunter)
 
 - Study about the Egg Hunter shellcode
 
@@ -47,7 +47,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 ---------------------------------------------------
 
 
-## [Assignment #4](https://github.com/ricardojoserf/slae/tree/master/ex4)
+## [Assignment #4](https://github.com/ricardojoserf/slae/tree/master/a4_Custom_Encoder)
 
 - Create a custom encoding scheme like the "Insertion Encoder" we showed you
 
@@ -56,7 +56,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 
 ---------------------------------------------------
 
-## [Assignment #5](https://github.com/ricardojoserf/slae/tree/master/ex5)
+## [Assignment #5](https://github.com/ricardojoserf/slae/tree/master/a5_Shellcode_Functionality)
 
 - Take up at leat 3 shellcode samples created using Msfvenom for linux/x86
 
@@ -67,7 +67,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 ---------------------------------------------------
 
 
-## [Assignment #6](https://github.com/ricardojoserf/slae/tree/master/ex6)
+## [Assignment #6](https://github.com/ricardojoserf/slae/tree/master/a6_Polymorphism)
 
 - Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
 
@@ -79,7 +79,7 @@ This course focuses on teaching the basics of 32-bit assembly language for the I
 ---------------------------------------------------
 
 
-## [Assignment #7](https://github.com/ricardojoserf/slae/tree/master/ex7)
+## [Assignment #7](https://github.com/ricardojoserf/slae/tree/master/a7_Custom_Crypter)
 
 - Create a custom crypter like the one shown in the "crypters" video
 
