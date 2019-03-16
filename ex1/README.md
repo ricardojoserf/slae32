@@ -33,9 +33,11 @@ After installing Libemu, we will use the *sctest* binary. We can get the result 
 
 ```
 msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 | ./sctest -vvv -Ss 10000 -G bindshell.dot
+```
 
--------------------------------------
+Or we can use the libemu.sh script (in scripts/ folder):
 
+```
 sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888" bindshell | tee libemu_res/libemu_res.txt
 ```
 
