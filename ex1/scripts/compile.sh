@@ -1,12 +1,14 @@
 #!/bin/bash
 
+file="$1"
+
 echo '[+] Assembling with Nasm ... '
-nasm -f elf32 -o shell_bind_tcp.o shell_bind_tcp.nasm
+nasm -f elf32 -o $file.o $file.nasm
 
 echo '[+] Linking ...'
-ld -m elf_i386 -o shell_bind_tcp shell_bind_tcp.o
+ld -m elf_i386 -o $file $file.o
 
 echo '[+] Done!'
 
-rm shell_bind_tcp.o
+rm $file.o
 #./shell_bind_tcp

