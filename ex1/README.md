@@ -238,3 +238,5 @@ This is included in the **ndisasm_approach** folder, but the wrapper has been de
 - http://www6.uniovi.es/cscene/CS5/CS5-05.html
 - https://stackoverflow.com/questions/48773917/why-creating-a-remote-shell-using-execve-doesnt-overwrite-file-descriptors-and
 - https://www.tutorialspoint.com/assembly_programming/assembly_system_calls.htm
+- https://forum.nasm.us/index.php?topic=889.0
+
