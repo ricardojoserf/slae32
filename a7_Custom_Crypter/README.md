@@ -1,6 +1,4 @@
-# Exercise 7
-
-## Assignment #7
+# Assignment #7: Custom crypter
 
 - Create a custom crypter like the one shown in the "crypters" video
 

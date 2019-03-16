@@ -1,6 +1,4 @@
-# Exercise 4
-
-## Assignment #4
+# Assignment #4: Custom encoding schema
 
 - Create a custom encoding scheme like the "Insertion Encoder" we showed you
 

@@ -1,6 +1,4 @@
-# Exercise 3
-
-## Assignment #3
+# Assignment #3: Egg Hunter shellcode
 
 - Study about the Egg Hunter shellcode
 

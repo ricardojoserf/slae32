@@ -1,6 +1,4 @@
-# Exercise 5
-
-## Assignment #5
+# Assignment #5: Shellcode functionality
 
 - Take up at leat 3 shellcode samples created using Msfvenom for linux/x86
 

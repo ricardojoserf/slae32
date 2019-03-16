@@ -1,6 +1,5 @@
-# Exercise 1
+# Assignment #1: Shell_Bind_TCP shellcode
 
-## Assignment #1
 
 - Create a Shell_Bind_TCP shellcode
 

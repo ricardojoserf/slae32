@@ -1,6 +1,4 @@
-# Exercise 6
-
-## Assignment #6
+# Assignment #6: Polymorphic shellcodes
 
 - Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
 
