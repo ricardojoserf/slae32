@@ -10,7 +10,7 @@ def get_args():
   parser.add_argument('-k', '--aes_key', required=True, action='store', help='AES Key')
   parser.add_argument('-e', '--encrypt', required=False, action='store', help='Encrypt')
   parser.add_argument('-d', '--decrypt', required=False, action='store', help='Decrypt')
-  parser.add_argument('-x', '--execute', required=False, action='store_true', help='Execute the decoded shellcode')
+  parser.add_argument('-x', '--execute', required=False, action='store_true', help='Execute the decrypted shellcode')
   my_args = parser.parse_args()
   return my_args
 
@@ -73,7 +73,7 @@ def show_info(text, shellcode=False):
 		print "Shellcode: %s" % (text)	
 		print "\n------------------------------"
 	else:
-		print "\nEncoded Shellcode: %s" % (text)	
+		print "\nEncrypted Shellcode: %s" % (text)	
 		print "\n------------------------------"
 
 
@@ -92,10 +92,10 @@ def main():
 
 	elif decrypt_arg is not None:
 		show_info(decrypt_arg)
-		decoded = decrypt_(decrypt_arg, aes_key)
-		show_info(decoded, True)
+		decrypted = decrypt_(decrypt_arg, aes_key)
+		show_info(decrypted, True)
 		if args.execute:
-			run_shellcode(decoded)
+			run_shellcode(decrypted)
 
 	
 

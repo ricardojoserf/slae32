@@ -1,4 +1,3 @@
-
 ## 5.2 Payload *linux/x86/read_file*
 
 ### Check options

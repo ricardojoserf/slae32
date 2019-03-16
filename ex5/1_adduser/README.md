@@ -1,5 +1,3 @@
-# Exercise 5
-
 ## 5.1 Payload *linux/x86/adduser*
 
 
