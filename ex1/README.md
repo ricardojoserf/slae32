@@ -7,7 +7,19 @@
 python wrapper.py $PORT
 ```
 
+Example with port 7777:
+
 ![Screenshot](images/wrapper/5.png)
+
+Then it can be compiled and executed:
+
+![Screenshot](images/wrapper/51.png)
+
+
+Result:
+
+![Screenshot](images/wrapper/52.png)
+
 
 If the port causes problems, a warning message will appear:
 
