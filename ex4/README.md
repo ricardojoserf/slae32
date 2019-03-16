@@ -48,6 +48,8 @@ The value to verify the shellcode has finished will be calculated in the Python 
 
 
 
+---------------------------------------------------
+
 ## Note
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3

@@ -909,6 +909,9 @@ Finally we can compile the nasm file and check it works correctly:
 ![Screenshot](images/randbind/30.png)
 
 
+---------------------------------------------------
+
+
 ## Note
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
