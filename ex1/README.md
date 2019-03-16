@@ -160,11 +160,7 @@ Knowing this and the values from the Libemu's output, it is possible to write th
 
 ### Creating the Python wrapper 
 
-Get the shellcode:
-
-![Screenshot](images/wrapper/1.png)
-
-Change the "\\" to "\\\\":
+Get the shellcode changing the "\\" to "\\\\":
 
 ![Screenshot](images/wrapper/2.png)
 
@@ -172,7 +168,7 @@ Detect where the port (8888 or 0x22b8 in hexadecimal) is being used:
 
 ![Screenshot](images/wrapper/3.png)
 
-Now er know the value in the original shellcode which must be substituted:
+Now we know the value in the original shellcode which must be substituted:
 
 ![Screenshot](images/wrapper/4.png)
 
