@@ -9,6 +9,9 @@
 - Bonus points for making it shorter in length than original
 
 
+---------------------------------------------------
+
+
 ## 6.1 Shellcode "TCP bind shell" 
 
 Original size: 108 bytes

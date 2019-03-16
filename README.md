@@ -1,7 +1,8 @@
 # Securitytube Linux Assembly Expert 32-bits
 
+---------------------------------------------------
 
-## Assignment #1
+## [Assignment #1](https://github.com/ricardojoserf/slae/tree/master/ex1)
 
 - Create a Shell_Bind_TCP shellcode
 
@@ -12,7 +13,10 @@
 - Port number should be easily configurable
 
 
-## Assignment #2
+---------------------------------------------------
+
+
+## [Assignment #2](https://github.com/ricardojoserf/slae/tree/master/ex2)
 
 - Create a Shell_Reverse_TCP shellcode
 
@@ -23,7 +27,10 @@
 - IP and Port number should be easily configurable
 
 
-## Assignment #3
+---------------------------------------------------
+
+
+## [Assignment #3](https://github.com/ricardojoserf/slae/tree/master/ex3)
 
 - Study about the Egg Hunter shellcode
 
@@ -32,14 +39,19 @@
 - Should be configurable for different payloads
 
 
-## Assignment #4
+---------------------------------------------------
+
+
+## [Assignment #4](https://github.com/ricardojoserf/slae/tree/master/ex4)
 
 - Create a custom encoding scheme like the "Insertion Encoder" we showed you
 
 - PoC with using execve-stack as the shellcode to encode with your schema and execute
 
 
-## Assignment #5
+---------------------------------------------------
+
+## [Assignment #5](https://github.com/ricardojoserf/slae/tree/master/ex5)
 
 - Take up at leat 3 shellcode samples created using Msfvenom for linux/x86
 
@@ -47,8 +59,10 @@
 
 - Present your analysis
 
+---------------------------------------------------
 
-## Assignment #6
+
+## [Assignment #6](https://github.com/ricardojoserf/slae/tree/master/ex6)
 
 - Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
 
@@ -57,7 +71,10 @@
 - Bonus points for making it shorter in length than original
 
 
-## Assignment #7
+---------------------------------------------------
+
+
+## [Assignment #7](https://github.com/ricardojoserf/slae/tree/master/ex7)
 
 - Create a custom crypter like the one shown in the "crypters" video
 

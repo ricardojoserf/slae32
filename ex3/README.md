@@ -9,6 +9,9 @@
 - Should be configurable for different payloads
 
 
+---------------------------------------------------
+
+
 ## What is an EggHunter?
 
 It is a very efficient exploitation method when we have little space to store our shellcode which can be seen as a [Staged Shellcode](https://en.wikipedia.org/wiki/Shellcode#Staged).
