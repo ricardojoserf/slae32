@@ -19,13 +19,19 @@ def get_stop_code(shellcode):
 	return stop_code
 
 
+def ror(x, n, bits = 8):
+    mask = (2**n) - 1
+    mask_bits = x & mask
+    return (x >> n) | (mask_bits << (bits - n))
+
+    
 def encode_shellcode(shellcode, hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
-		x = x - 7
+		y = ( ror(x,1) ^ 224 ) - 7
 		encoded2 += '0x'
-		encoded2 += '%02x,' %x
+		encoded2 += '%02x,' %y
 		# Value 2: Random value != stop_code
 		rand_number = random.randint(1,10)
 		encoded2 += '0x%02x,' % rand_number
@@ -34,7 +40,7 @@ def encode_shellcode(shellcode, hex_stop_code):
 
 
 def create_new_file(hex_stop_code, encoded2):
-	file_name = 'insertion-decoder.nasm'
+	file_name = 'decoder.nasm'
 	lines = open(file_name).read().splitlines()
 	new_file_lines = []
 	for l in lines:
@@ -81,11 +87,12 @@ def main():
 	encoded2 = encode_shellcode(shellcode, hex_stop_code)
 	create_new_file(hex_stop_code, encoded2)
 	
-	file_name = "insertion-decoder"
+	file_name = "decoder"
 	compile(file_name)
 	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
 	shellcode = os.popen(cmd).read().splitlines()[0]
-	print ("Shellcode: \n"+shellcode)
+	print ("Shellcode: \n\n"+shellcode)
+	print("\n--------------------------\n")
 	create_new_file_shellcode(shellcode)
 	os.system("gcc -fno-stack-protector -z execstack shellcode.c -o shellcode 2>/dev/null")
 	

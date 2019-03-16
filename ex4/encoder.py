@@ -3,6 +3,14 @@
 import random
 import sys, os
 
+
+
+def ror(x, n, bits = 8):
+    mask = (2**n) - 1
+    mask_bits = x & mask
+    return (x >> n) | (mask_bits << (bits - n))
+
+
 def get_stop_code(shellcode):
 	list_codes = bytearray(shellcode)
 	min_number = min(list_codes)
@@ -24,9 +32,9 @@ def encoded(hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
-		x = x - 7
+		y = ( ror(x,1) ^ 224 ) - 7
 		encoded2 += '0x'
-		encoded2 += '%02x,' %x
+		encoded2 += '%02x,' %y
 		# Value 2: Random value != stop_code
 		rand_number = random.randint(1,10)
 		encoded2 += '0x%02x,' % rand_number
