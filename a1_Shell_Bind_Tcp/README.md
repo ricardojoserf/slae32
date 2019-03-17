@@ -14,7 +14,7 @@
 
 ## Usage
 
-```
+```bash
 python wrapper.py $PORT
 ```
 
@@ -42,20 +42,20 @@ If the port causes problems, a warning message will appear:
 
 After installing Libemu, we will use the *sctest* binary. We can get the result using the binary directly or the *libemu.sh* script (in **scripts/** folder):
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888 | ./sctest -vvv -Ss 10000 -G bindshell.dot
 ```
 
 Or we can use the libemu.sh script (in scripts/ folder):
 
-```
+```bash
 sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f raw LPORT=8888" bindshell | tee libemu_res/libemu_res.txt
 ```
 
 
 The result:
 
-```
+```javascript
 int socket (
      int domain = 2;
      int type = 1;
@@ -163,7 +163,7 @@ int execve (
 
 Once we know the system calls or syscalls, the values used in them and the order, it is necessary to get the hexadecimal values for every syscall, using cat and printf to print the hexadecimal value:
 
-```
+```bash
 cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep listen
 
 printf "%x\n" 363
@@ -171,7 +171,7 @@ printf "%x\n" 363
 
 Or the *syscallhex.sh* script (in **scripts/** folder)
 
-```
+```bash
 sh syscallhex.sh listen
 ```
 
@@ -222,7 +222,7 @@ After this, we just must take the input to the wrapper script, translate the por
 ## Second approach: Ndisasm
 
 A second approach, which can be considered easier, is to get the nasm file from the raw output from msfvenom:
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp LPORT=8888 --platform=Linux -a x86 -f raw | ndisasm -u -
 ```
 
