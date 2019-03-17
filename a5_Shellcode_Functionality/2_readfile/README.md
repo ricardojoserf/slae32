@@ -1,7 +1,7 @@
 ## 5.2 Payload *linux/x86/read_file*
 
 ### Check options
-```
+```bash
 msfvenom -p linux/x86/read_file --list-options
 ```
 
@@ -18,7 +18,7 @@ There are 3 basic options:
 
 For this study we will use the basic options:
 
-```
+```bash
 msfvenom -p linux/x86/read_file FD=1 PATH=/etc/passwd --platform=Linux -a x86 -f c
 ```
 
@@ -27,7 +27,7 @@ msfvenom -p linux/x86/read_file FD=1 PATH=/etc/passwd --platform=Linux -a x86 -f
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
-```
+```bash
 msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f c FD=1 PATH=/etc/passwd | grep '"' | sed -e 's/\"//g' | paste -sd "" - | tr ";" " "
 ```
 
@@ -49,14 +49,14 @@ When the PNG picture is generated it is empty.
 
 With ndisasm it is possible to get the .nasm code using:
 
-```
+```bash
 msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f raw FD=1 PATH=/etc/passwd | ndisasm -u -
 ```
 
 
 Or a little quicker:
 
-```
+```bash
 echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u -
 ```
 
@@ -65,7 +65,7 @@ echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
-```
+```bash
 echo -e "section .text\nglobal _start \n_start:" > 2.nasm
 
 echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 2.nasm
@@ -106,7 +106,7 @@ Next, the executable gets generated using the *shellcode.c* script:
 
 It is compiled:
 
-```
+```bash
 gcc -fno-stack-protector -z execstack shellcode.c -o 2
 ```
 
@@ -124,7 +124,7 @@ Also note that if we study the binary there are interesting strings we can find 
 
 First, the executable is attached in quiet mode:
 
-```
+```bash
 gdb -q 2
 ```
 Then, we set the disassembly flavor, define the "hook-stop" function, and jump into the "main" function (the one from shellcode.c):
