@@ -55,7 +55,7 @@ sh libemu.sh "msfvenom -p linux/x86/shell_bind_tcp --platform=Linux -a x86 -f ra
 
 The result:
 
-```javascript
+```cpp
 int socket (
      int domain = 2;
      int type = 1;
