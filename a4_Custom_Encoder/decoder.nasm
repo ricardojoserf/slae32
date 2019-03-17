@@ -1,10 +1,6 @@
-; Filename: insertion-decoder.nasm
-; Author:  Vivek Ramachandran
-; Website:  http://securitytube.net
-; Training: http://securitytube-training.com 
-;
-;
-; Purpose: 
+; Filename: decoder.nasm
+; Author:  Ricardo Ruiz
+; Website:  https://ricardojruiz.herokuapp.com/
 
 global _start			
 section .text

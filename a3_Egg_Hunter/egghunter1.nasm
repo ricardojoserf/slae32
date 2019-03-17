@@ -1,3 +1,7 @@
+; Filename: egghunter1.nasm
+; Author:  Ricardo Ruiz
+; Website:  https://ricardojruiz.herokuapp.com/
+
 global _start
 
 section .text

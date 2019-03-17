@@ -1,3 +1,7 @@
+; Filename: shell_bind_tcp.nasm
+; Author:  Ricardo Ruiz
+; Website:  https://ricardojruiz.herokuapp.com/
+
 section .text
 	global _start 
 _start:
