@@ -2,7 +2,7 @@
 
 This course focuses on teaching the basics of 32-bit assembly language for the Intel Architecture (IA-32) family of processors on the Linux platform and applying it to Infosec. Once we are through with the basics, we will look at writing shellcode, encoders, decoders, crypters and other advanced low level applications.
 
-<img src="scripts_all/logo.png" alt="Logo" width="600"/>
+<img src="scripts_all/logo.png" alt="Logo" width="800"/>
 
 
 ---------------------------------------------------
