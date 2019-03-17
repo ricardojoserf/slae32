@@ -29,7 +29,7 @@ The two egghunters studied use the same syscall: access.
 
 ### Egghunter 1
 
-```
+```assembly
 global _start
 
 section .text
@@ -67,7 +67,7 @@ It is tested with the execve shellcode as payload:
 
 ### Egghunter 2
 
-```
+```assembly
 global _start
 
 section .text
@@ -107,7 +107,7 @@ It is tested with the execve shellcode as payload:
 This is the code of *shellcode.c* for this exercise:
 
 
-```
+```cpp
 #include <stdio.h>
 #include <string.h>
 #define egg "\x90\x50\x90\x50"
