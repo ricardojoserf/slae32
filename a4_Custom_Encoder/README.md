@@ -25,6 +25,8 @@ python test.py  && ./shellcode
 For this exercise, we start from the "Insertion" and "NOP" encoders from the course, update both ideas and create two new encoding algorithms.
 
 
+---------------------------------------------------
+
 
 ### Encoding 1: Random inserted opcodes
 
@@ -39,6 +41,9 @@ Furthermore, the correct opcodes will be encoded with a sum operation, adding 1 
 To verify it is correct, it can be tested using the test script or step by step, as shown in the next picture. The encoder Python script is executed, the output updates the *EncodedShellcode* variable of *decoder.nasm* value, and the .nasm file is compiled. Then, the executable can be created after updating the *shellcode.c* file and compiling it using gcc:
 
 ![Screenshot](images/4.png)
+
+
+---------------------------------------------------
 
 
 ### Encoding 2: Opcodes encoding
