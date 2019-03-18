@@ -42,7 +42,11 @@ python main.py -d 7L8lgzzXoM1KnsFbIFOPgY3PPx8K5aM5IT2HC8ULBrhcYvbTr4/ItEVN6DgDuJ
 
 ![Screenshot](images/2.png)
 
+### Binary
 
+Finally, a binary is created using the program *pyinstaller* with the option -F, which has the same functionality than the *main.py* file:
+
+![Screenshot](images/3.png)
 
 ---------------------------------------------------
 
