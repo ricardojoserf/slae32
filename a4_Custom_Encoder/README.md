@@ -22,11 +22,26 @@ python test.py  && ./shellcode
 
 ## Custom encoding
 
-For this exercise, we start from the "Insertion" and "NOP" encoders from the course, update both ideas and create a single encoding algorithm.
+For this exercise, we start from the "Insertion" and "NOP" encoders from the course, update both ideas and create two new encoding algorithms.
 
 
 
-### Idea 1: Opcodes encoding
+### Encoding 1: Random inserted opcodes
+
+In this algorithm, there will be fake opcodes inserted between every correct opcode as in the "Insertion" encoder but, in this case, the values will be randomized. This will cause that the shellcode is different every time the program is run: 
+
+![Screenshot](images/3.png)
+
+The value to verify the shellcode has finished will be calculated in the Python script, an unused value between the minimum and the maximum of the opcode values of the shellcode. For example, in the case of the "execve" shellcode, this value is "\xe0".
+
+Furthermore, the correct opcodes will be encoded with a sum operation, adding 1 to the value during the encoding process and substracting 1 during the decoding.
+
+To verify it is correct, it can be tested using the test script or step by step, as shown in the next picture. The encoder Python script is executed, the output updates the *EncodedShellcode* variable of *decoder.nasm* value, and the .nasm file is compiled. Then, the executable can be created after updating the *shellcode.c* file and compiling it using gcc:
+
+![Screenshot](images/4.png)
+
+
+### Encoding 2: Opcodes encoding
 
 There will be 3 operations to encode every opcode: a ROR operation with the value 1 ("rotating" the bits once towards the "right"), a XOR with *0xe0* and a substraction with the value 7. 
 
@@ -36,16 +51,9 @@ This can be understood better with the next picture:
 
 ![Screenshot](images/2.png)
 
+To verify it is correct, it can be tested using the test script or step by step, as shown in the next picture. The encoder Python script is executed, the output updates the *EncodedShellcode* variable of *decoder.nasm* value, and the .nasm file is compiled. Then, the executable can be created after updating the *shellcode.c* file and compiling it using gcc:
 
-
-### Idea 2: Random inserted opcodes
-
-There will be fake opcodes inserted between every correct opcode as in the "Insertion" encoder but, in this case, the values will be randomized. This will cause that the shellcode is different every time the program is run. 
-
-![Screenshot](images/3.png)
-
-The value to verify the shellcode has finished will be calculated in the Python script, a not used value between the minimum and the maximum of the opcode values of the shellcode. For example, in this case the value is "\xe0".
-
+![Screenshot](images/5.png)
 
 
 
