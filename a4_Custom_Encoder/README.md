@@ -20,9 +20,9 @@ python test.py  && ./shellcode
 
 
 
-## Custom encoding
+## Motivation
 
-For this exercise, we start from the "Insertion" and "NOP" encoders from the course, update both ideas and create two new encoding algorithms.
+The motivation to create custom encoding algorithms is to be able to beat pattern matching and bypass AVs. For this exercise, we start from the "Insertion" and "NOP" encoders from the course, update both ideas and create two new encoding algorithms.
 
 
 ---------------------------------------------------

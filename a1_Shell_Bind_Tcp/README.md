@@ -12,13 +12,17 @@
 
 ---------------------------------------------------
 
-## Usage
+
+
+## Quick usage
+
+In this repository there is a .nasm file with a "bind shell" coded in assembly. By default, it binds to the port 8888. However, there is a Python wrapper to generate the shellcode to change the port number easily. The syntax is:
 
 ```bash
 python wrapper.py $PORT
 ```
 
-Example with port 7777:
+For example, we could create the shellcode for the port 7777:
 
 ![Screenshot](images/wrapper/5.png)
 
@@ -27,12 +31,12 @@ Then it can be compiled and executed:
 ![Screenshot](images/wrapper/51.png)
 
 
-Result:
+The result:
 
 ![Screenshot](images/wrapper/52.png)
 
 
-If the port causes problems, a warning message will appear:
+Moreover, if the port causes problems, a warning message will appear:
 
 ![Screenshot](images/wrapper/6.png)
 

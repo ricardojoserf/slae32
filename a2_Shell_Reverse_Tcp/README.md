@@ -12,7 +12,9 @@
 ---------------------------------------------------
 
 
-## Usage
+## Quick usage
+
+In this repository there is a .nasm file with a "reverse shell" coded in assembly. By default, it connects to the IP 127.0.0.1 and the port 8888. However, there is a Python wrapper to generate the shellcode to change the IP and port number easily. The syntax is:
 
 ```bash
 python wrapper.py $IP $PORT
@@ -25,7 +27,7 @@ If there are not input variables, the program asks for them:
 ![Screenshot](images/wrapper/1.png)
 
 
-Test with port 7777:
+For example, we could create the shellcode for the port 7777 and the IP 0.0.0.0:
 
 ![Screenshot](images/wrapper/3.png)
 

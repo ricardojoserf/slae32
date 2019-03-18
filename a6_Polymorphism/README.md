@@ -9,6 +9,10 @@
 
 ---------------------------------------------------
 
+## Motivation
+
+The polymorphic version of a shellcode keeps the same functionality of the original code. However, the opcodes are different so if the process is done correctly it is possible to beat pattern matching and bypass AVs. In this assignment three shellcodes from Shell-storm will be updated and the opcodes will differ for almost every line, but the code will work as before.
+
 
 ## 6.1 Shellcode "TCP Bind Shell" 
 

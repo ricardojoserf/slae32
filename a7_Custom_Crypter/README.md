@@ -9,9 +9,9 @@
 
 ---------------------------------------------------
 
-## Encryption
+## Motivation
 
-In this assignment the encryption chosen is AES-CBC. The programming language is Python because i found an example to execute the shellcode with it.
+The motivation in this last assignment is similar to the one in the Custom encoder and Polymorphic code, to be able to bypass AVs and execute the desired shellcode. In this assignment the encryption chosen is AES-CBC and the programming language is Python after finding out how to execute the shellcode with it and create a binary file from the Python code.
 
 
 ## Usage
