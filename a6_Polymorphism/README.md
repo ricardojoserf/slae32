@@ -10,7 +10,7 @@
 ---------------------------------------------------
 
 
-## 6.1 Shellcode "TCP bind shell" 
+## 6.1 Shellcode "TCP Bind Shell" 
 
 Original size: 	108 bytes
 
@@ -23,7 +23,7 @@ Url: http://shell-storm.org/shellcode/files/shellcode-847.php
 ![Screenshot](images/1_2.png)
 
 
-## 6.2 Shellcode "REVERSE shell"
+## 6.2 Shellcode "TCP Reverse Shell"
 
 Original size: 	89 bytes
 
