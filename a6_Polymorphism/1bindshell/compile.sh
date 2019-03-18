@@ -12,3 +12,6 @@ echo '[+] Done!'
 
 rm $file.o
 #./$file
+sh clean.sh 1
+
+gcc -fno-stack-protector -z execstack shellcode.c -o poly1

