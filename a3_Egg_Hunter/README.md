@@ -18,7 +18,7 @@ Summing up, the first part of shellcode will be responsible for searching our 4-
 
 Knowing this, the first part is the most important and the one which must be researched carefully. There are many "egghunters" on the internet, but in this case we will focus our study in the ones shown in [the Skape's paper from 2004](http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf).
 
-These egghunters have the three requirements needed: robustness, small size and they are fast. In all of them the author uses 8-byte "eggs", which means that the tag is used twice, so . The technique is based on the system calls, given they can *validate process-relative memory addresses without leading to a segmentation fault or other runtime error in the program itself*, using them to check if the memory is readable and later if the tag has been reached.
+These egghunters have the three requirements needed: robustness, small size and they are fast. In all of them the author uses 8-byte "eggs", which means that the tag is used twice, so . The technique is based on the system calls, given they can "*validate process-relative memory addresses without leading to a segmentation fault or other runtime error in the program itself*", using them to check if the memory is readable and later if the tag has been reached.
 
 
 ## EggHunter study
@@ -28,6 +28,8 @@ The two egghunters studied use the same syscall: access.
 
 
 ### Egghunter 1
+
+From the code in page 8 it is possible to extract the first egghunter, with a size of 39 bytes and an estimated speed in the paper of 8 seconds:
 
 ```assembly
 global _start
@@ -42,7 +44,7 @@ jump1:
   or dx, 0xfff
 
 jump2:
-  inc edx
+  inc edx; $edx = Size 4096 bytes
   pusha
   lea ebx, [edx+0x4]
   xor eax, eax
@@ -58,7 +60,9 @@ jump2:
   jmp edx
 ```
 
-It is tested with the execve shellcode as payload:
+This code uses a "page size" of 4096 bytes (0x0fff + 0x0001 = 0x1000 or 4096) which is set in EDX register, EBX register contains the address to validate (current address of EDX plus 4) and EAX contains the value needed for the access system call (0x21). After the system call, EAX is compared with 0xf2 (which represents EFAULT), if the comparison is not met the address value is checked agaisnt the "egg" value twice, contained in EBX register (given the registers value is stored before the system call and restored before checking the address against the "egg" using *pusha* and *popa*).
+
+Finally, it is tested with the "execve" shellcode as payload:
 
 ![Screenshot](images/2.png)
 
@@ -66,6 +70,8 @@ It is tested with the execve shellcode as payload:
 
 
 ### Egghunter 2
+
+From the code in page 11 it is possible to extract the second egghunter, with a size of 35 bytes (so it is smaller than the previous one) and an estimated speed in the paper of 7,5 seconds (so it is faster):
 
 ```assembly
 global _start
@@ -95,6 +101,7 @@ test2:
   jnz test2
   jmp edi
 ```
+In this second shellcode the great difference is the "egg" comparison, because a IA32 native instruction named *scasd* is used in this case, allowing a small comparison.
 
 It is tested with the execve shellcode as payload:
 
