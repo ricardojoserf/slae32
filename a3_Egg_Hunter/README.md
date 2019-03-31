@@ -111,7 +111,7 @@ Finally, it is tested with the "execve" shellcode as payload:
 
 ### POC code
 
-This is the code of *shellcode.c* for this exercise, which :
+This is the code of *shellcode.c* for this exercise. As it can be seen, the payload can be easily configured:
 
 
 ```cpp
