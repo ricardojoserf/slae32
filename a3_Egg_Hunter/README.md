@@ -101,7 +101,7 @@ test2:
   jnz test2
   jmp edi
 ```
-This code uses a "page size" of 4096 bytes (0x0fff + 0x0001 = 0x1000 or 4096) which is set in EDX register, EBX register contains the address to validate (current address of EDX plus 4) and EAX contains the value needed for the access system call (0x21). After the system call, EAX is compared with 0xf2 (which represents EFAULT), if the comparison is not met the address value is checked agaisnt the "egg" value twice, contained in EBX register (given the registers value is stored before the system call and restored before checking the address against the "egg" using *pusha* and *popa*).
+In this second shellcode the great difference is the "egg" comparison, because in this case an IA32 native instruction named *scasd* is used, allowing to use an smaller number of opcodes for the comparison.
 
 Finally, it is tested with the "execve" shellcode as payload:
 
