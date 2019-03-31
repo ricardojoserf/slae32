@@ -143,7 +143,7 @@ There are some values used in the second syscall:
 
 ![Screenshot](images/adduser/11.png)
 
-And one in the third
+And one in the third:
 
 ![Screenshot](images/adduser/12.png)
 
@@ -215,11 +215,11 @@ The EAX value is 70 so in fact it is a setreuid() syscall. The value of EBX and 
 
 ### Syscall 2
 
-Next syscall is the one in 0x00404063, Before continuing a quick "hook-stop" is defined:
+Next syscall is the one in 0x00404063. Before continuing, a quick "hook-stop" is defined:
 
 ![Screenshot](images/adduser/23.png)
 
-Then, the next breakpoint is reached. 
+Then, the next breakpoint is reached: 
 
 ![Screenshot](images/adduser/24.png)
 
@@ -272,7 +272,7 @@ These are:
 
 - EDX = 39 => Number of bytes to write 
 
-So, after this the file gets a new line.
+So, after this the file has a new line.
 
 
 ### Syscall 4
@@ -290,7 +290,7 @@ Now we can update the nasm code deleting the unused opcodes and adding the strin
 
 ![Screenshot](images/adduser/33.png)
 
-Finally we can compile the nasm file and check it works correctly:
+Finally we can compile the .nasm file and check it works correctly:
 
 ![Screenshot](images/adduser/34.png)
 
@@ -391,7 +391,7 @@ After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the sysca
 
 - Syscall 2 (Value 0x3 or 3 in decimal): read() - *It attempts  to  read up to count bytes from file descriptor fd into the buffer starting at buf.*
 
-- Syscall 3 (Value 0x4 or 4 in decimal): write()
+- Syscall 3 (Value 0x4 or 4 in decimal): write() - *It writes up to count bytes from the buffer pointed buf to the file referred to by the file descriptor fd.*
 
 - Syscall 4 (Value 0x1 or 1 in decimal): exit() - *It causes normal process termination and the value of status & 0377 is returned to the parent*
 
