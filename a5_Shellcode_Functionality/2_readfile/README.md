@@ -1,13 +1,13 @@
-## 5.2 Payload *linux/x86/read_file*
+# 5.2 Payload *linux/x86/read_file*
 
 ### Check options
-```bash
+```
 msfvenom -p linux/x86/read_file --list-options
 ```
 
-![Screenshot](../images/read_file/1.png)
+![Screenshot](images/read_file/1.png)
 
-![Screenshot](../images/read_file/2.png)
+![Screenshot](images/read_file/2.png)
 
 
 There are 3 basic options:
@@ -33,14 +33,14 @@ msfvenom -p linux/x86/read_file --platform=Linux -a x86 -f c FD=1 PATH=/etc/pass
 
 Using it, we get the shellcode we will use for the study of the payload:
 
-![Screenshot](../images/read_file/3.png)
+![Screenshot](images/read_file/3.png)
 
 
 ### Libemu
 
 Libemu does not show any output in this case:
 
-![Screenshot](../images/read_file/4.png)
+![Screenshot](images/read_file/4.png)
 
 When the PNG picture is generated it is empty.
 
@@ -61,7 +61,7 @@ echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x
 ```
 
 
-![Screenshot](../images/read_file/5.png)
+![Screenshot](images/read_file/5.png)
 
 Using awk it is possible to get only the part we want and create a .nasm file:
 
@@ -71,7 +71,7 @@ echo -e "section .text\nglobal _start \n_start:" > 2.nasm
 echo -ne "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u - | awk '{$2=$2};1' - | cut -d " " -f 3-10 >> 2.nasm
 ```
 
-![Screenshot](../images/read_file/6.png)
+![Screenshot](images/read_file/6.png)
 
 
 With a little bit of indentation, the nasm file is created and ready to be studied. 
@@ -83,7 +83,7 @@ Given we have the nasm code, the first thing to do will be studying the differen
 
 In this case we have four syscalls:
 
-![Screenshot](../images/read_file/7.png)
+![Screenshot](images/read_file/7.png)
 
 
 After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the syscalls seem to be:
@@ -92,7 +92,7 @@ After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the sysca
 
 - Syscall 2 (Value 0x3 or 3 in decimal): read() - *It attempts  to  read up to count bytes from file descriptor fd into the buffer starting at buf.*
 
-- Syscall 3 (Value 0x4 or 4 in decimal): write()
+- Syscall 3 (Value 0x4 or 4 in decimal): write() - *It writes up to count bytes from the buffer pointed buf to the file referred to by the file descriptor fd.*
 
 - Syscall 4 (Value 0x1 or 1 in decimal): exit() - *It causes normal process termination and the value of status & 0377 is returned to the parent*
 
@@ -102,7 +102,7 @@ After checking the */usr/include/i386-linux-gnu/asm/unistd_32.h* file, the sysca
 
 Next, the executable gets generated using the *shellcode.c* script:
 
-![Screenshot](../images/read_file/8.png)
+![Screenshot](images/read_file/8.png)
 
 It is compiled:
 
@@ -112,12 +112,12 @@ gcc -fno-stack-protector -z execstack shellcode.c -o 2
 
 An executable named "2" gets generated. It is possible to execute it and check the output:
 
-![Screenshot](../images/read_file/9.png)
+![Screenshot](images/read_file/9.png)
 
 
 Also note that if we study the binary there are interesting strings we can find (this one will appear again later):
 
-![Screenshot](../images/read_file/10.png)
+![Screenshot](images/read_file/10.png)
 
 
 ### Study with GDB
@@ -129,35 +129,35 @@ gdb -q 2
 ```
 Then, we set the disassembly flavor, define the "hook-stop" function, and jump into the "main" function (the one from shellcode.c):
 
-![Screenshot](../images/read_file/11.png)
+![Screenshot](images/read_file/11.png)
 
 Now, we must jump to the shellcode, so we set a breakpoint in the last 'call eax' instruction visible in the previous screenshot (the previous call instructions show the length of the shellcode).
 
 We continue for one instruction using 'stepi' and the 'disassemble' command shows we have reached the shellcode. All the shellcode with the four syscalls can be read:
 
-![Screenshot](../images/read_file/12.png)
+![Screenshot](images/read_file/12.png)
 
 
 ### JMP-CALL-POP detected
 
 In 0x00404040 there is a jump (JMP) to 0x404078 which immediately calls 0x00404042. This is obviously a JMP-CALL-POP so we will read the values after 0x404078, which contain "/etc/passwd"
 
-![Screenshot](../images/read_file/13.png)
+![Screenshot](images/read_file/13.png)
 
 Now, we will set a breakpoint before every syscall: 0x0040404a, 0x0040405c, 0x0040406a and 0x00404076.
 
-![Screenshot](../images/read_file/14.png)
+![Screenshot](images/read_file/14.png)
 
 
 ### Syscall 1
 
 We reach the first syscall:
 
-![Screenshot](../images/read_file/15.png)
+![Screenshot](images/read_file/15.png)
 
 We read the man page of open:
 
-![Screenshot](../images/read_file/16.png)
+![Screenshot](images/read_file/16.png)
 
 And then the values are:
 
@@ -165,7 +165,7 @@ And then the values are:
 
 - EBX = 4210813 => The address of "/etc/passwd" string
 
-![Screenshot](../images/read_file/17.png)
+![Screenshot](images/read_file/17.png)
 
 - ECX = 0 => These are the flags values. In this case it is only needed the read permission.
 
@@ -174,11 +174,11 @@ And then the values are:
 
 We reach the second syscall:
 
-![Screenshot](../images/read_file/18.png)
+![Screenshot](images/read_file/18.png)
 
 We read the man page of read:
 
-![Screenshot](../images/read_file/19.png)
+![Screenshot](images/read_file/19.png)
 
 And then the values are:
 
@@ -195,7 +195,7 @@ And then the values are:
 
 We reach the third syscall:
 
-![Screenshot](../images/read_file/20.png)
+![Screenshot](images/read_file/20.png)
 
 We read the man page of write in here: https://linux.die.net/man/2/write
 
@@ -214,11 +214,11 @@ And then the values are:
 
 We reach the fourth syscall:
 
-![Screenshot](../images/read_file/21.png)
+![Screenshot](images/read_file/21.png)
 
 We read the man page of exit:
 
-![Screenshot](../images/read_file/22.png)
+![Screenshot](images/read_file/22.png)
 
 And then the values are:
 
@@ -232,20 +232,8 @@ And then the values are:
 
 Now we can update the nasm code deleting the unused opcodes and adding the string we found.
 
-![Screenshot](../images/read_file/24.png)
+![Screenshot](images/read_file/24.png)
 
 Finally we can compile the nasm file and check it works correctly:
 
-![Screenshot](../images/read_file/25.png)
-
-
----------------------------------------------------
-
-
-## Note
-
-This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: https://www.pentesteracademy.com/course?id=3
-
-Student ID: SLAE - 1433
-
-
+![Screenshot](images/read_file/25.png)
