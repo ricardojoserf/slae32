@@ -18,7 +18,7 @@ Summing up, the first part of shellcode will be responsible for searching our 4-
 
 Knowing this, the first part is the most important and the one which must be researched carefully. There are many "egghunters" on the internet, but in this case we will focus our study in the ones shown in [the Skape's paper from 2004](http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf).
 
-These egghunters have the three requirements needed: robustness, small size and they are fast. In all of them the author uses 8-byte "eggs", which means that the tag is used twice, so . The technique is based on the system calls, given they can "*validate process-relative memory addresses without leading to a segmentation fault or other runtime error in the program itself*", using them to check if the memory is readable and later if the tag has been reached.
+These egghunters have the three requirements needed: robustness, small size and they are fast. In all of them the author uses 8-byte "eggs", which means that the tag is used twice. The technique is based on the system calls, given they can "*validate process-relative memory addresses without leading to a segmentation fault or other runtime error in the program itself*", using them to check if the memory is readable and later if the tag has been reached.
 
 
 ## EggHunter study
@@ -101,7 +101,7 @@ test2:
   jnz test2
   jmp edi
 ```
-In this second shellcode the great difference is the "egg" comparison, because a IA32 native instruction named *scasd* is used in this case, allowing a small comparison.
+In this second shellcode the great difference is the "egg" comparison, because an IA32 native instruction named *scasd* is used in this case, allowing a small comparison.
 
 It is tested with the execve shellcode as payload:
 
